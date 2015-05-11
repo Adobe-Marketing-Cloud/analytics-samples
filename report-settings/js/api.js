@@ -1,4 +1,4 @@
-// provide jQuery selector for credential fields)
+// provide jQuery selector for credential fields
 var apiConfig = {
 	userName : "#login",
 	userSecret : "#secret",
@@ -65,15 +65,13 @@ function reportSuitesPopulate(data) {
 function ReportSuiteConfiguration(data) {
 	var reportSuiteCurrentConfig = data;
 	if (typeof window.fileData == "undefined") {
-		downloadSingleFile(JSON.stringify(data), $(apiConfig.reportSuiteSelect).val() + Date.now() +".json", 'text/json');
+		downloadSingleFile(JSON.stringify(data), $(apiConfig.reportSuiteSelect).val() + Date.now() + ".json", 'text/json');
 	} else {
 		reportSuiteOldConfig = JSON.parse(window.fileData);
 
-		confChecker(confCheckerConfig,reportSuiteOldConfig, reportSuiteCurrentConfig);
+		confChecker(confCheckerConfig, reportSuiteOldConfig, reportSuiteCurrentConfig);
 	}
 }
-
-
 
 window.onload = function () {
 	document.getElementById('getReportSuites').addEventListener('click', api.getReportSuites, false);

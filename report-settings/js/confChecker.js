@@ -6,11 +6,11 @@ function confChecker(objConfig, oldConfig, currentConfig, lvl, path) {
 	if (typeof lvl == "undefined") {
 		lvl = 0;
 		$(objConfig.placeHolder).html("");
-		
+
 	}
-	
+
 	if (typeof path == "undefined") {
-	path ="";
+		path = "";
 	}
 
 	function isArray(myArray) {
@@ -23,48 +23,46 @@ function confChecker(objConfig, oldConfig, currentConfig, lvl, path) {
 
 		return myArray.constructor.toString().indexOf("Array") > -1;
 	}
-	
-	function getObjData (data) {
-	if (data) {
-		try {
-		return JSON.parse(data);
-		}
-		catch(e) {
-		}
-	}
-	else return "";
+
+	function getObjData(data) {
+		if (data) {
+			try {
+				return JSON.parse(data);
+			} catch (e) {}
+		} else
+			return "";
 	}
 
-	function arrayHandler(objConfig, oldConfig, currentConfig,key) {
+	function arrayHandler(objConfig, oldConfig, currentConfig, key) {
 		if (isArray(oldConfig)) {
-			console.log("array handler",oldConfig);
-			
+			console.log("array handler", oldConfig);
+
 			if (typeof currentConfig != "undefined" && isArray(currentConfig)) {
 				if (currentConfig.length != oldConfig.length) {
-					$(objConfig.placeHolder).append("there is diff in: " + getObjData(oldConfig) + "vs " +getObjData(currentConfig));
+					$(objConfig.placeHolder).append("there is diff in: " + getObjData(oldConfig) + "vs " + getObjData(currentConfig));
 				} else {
-					oldConfig.forEach(function (k, i) {	
-						
-						confChecker(objConfig, oldConfig[i], currentConfig[i],lvl + 1,path + "/" + key +"/" + i);
+					oldConfig.forEach(function (k, i) {
+
+						confChecker(objConfig, oldConfig[i], currentConfig[i], lvl + 1, path + "/" + key + "/" + i);
 					});
 				}
 			} else {
-					$(objConfig.placeHolder).append("there is diff in: " + getObjData(oldConfig) + "vs "+ getObjData(currentConfig));
+				$(objConfig.placeHolder).append("there is diff in: " + getObjData(oldConfig) + "vs " + getObjData(currentConfig));
 			}
 		}
-		
+
 	}
 
-	function objectHandler(objConfig, oldConfig, currentConfig,key) {
+	function objectHandler(objConfig, oldConfig, currentConfig, key) {
 		if (typeof oldConfig === "object") {
-			confChecker(objConfig, oldConfig, currentConfig, lvl + 1,path + "/" + key);
+			confChecker(objConfig, oldConfig, currentConfig, lvl + 1, path + "/" + key);
 		}
 	}
 
-	function otherHandler(oldConfig, currentConfig,key) {
+	function otherHandler(oldConfig, currentConfig, key) {
 
 		if (typeof oldConfig != "object") {
-					console.log("other handler");
+			console.log("other handler");
 			if (oldConfig != currentConfig) {
 				$(objConfig.placeHolder).append("<p> there is diff" + path + ":" + key + ": " + "old val <b>" + oldConfig + "</b> new val: <b>" + currentConfig + "</b>");
 			}
@@ -73,19 +71,16 @@ function confChecker(objConfig, oldConfig, currentConfig, lvl, path) {
 	if (oldConfig) {
 		Object.keys(oldConfig).forEach(function (key, index) {
 			if (lvl === 0) {
-				
+
 				$(objConfig.placeHolder).append("<div> <hr /><h2>checking :" + key + "</h2> </div>");
-			 
+
 			}
 			if (typeof currentConfig == "undefined") {
 				currentConfig = {};
 			}
-			
-			//$(objConfig.placeHolder).append("<br/><div> <i>"+key+"</i>");
-			arrayHandler(objConfig, oldConfig[key], currentConfig[key],key);
-			objectHandler(objConfig, oldConfig[key], currentConfig[key],key);
-			otherHandler(oldConfig[key], currentConfig[key],key);
-			//$(objConfig.placeHolder).append("</div>");
+			arrayHandler(objConfig, oldConfig[key], currentConfig[key], key);
+			objectHandler(objConfig, oldConfig[key], currentConfig[key], key);
+			otherHandler(oldConfig[key], currentConfig[key], key);
 		});
 	}
 };
