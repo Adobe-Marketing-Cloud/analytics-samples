@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta name="generator"
+    content="HTML Tidy for HTML5 (experimental) for Windows https://github.com/w3c/tidy-html5/tree/c63cc39" />
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+    <script type="text/javascript" src="jquery-1.11.1.js"></script>
+    <script type="text/javascript" src="file_io.js"></script>
+    <script type="text/javascript" src="wsse.js"></script>
+    <script type="text/javascript" src="auth.js"></script>
+	<script type="text/javascript" src="confChecker.js"></script>
+    <script type="text/javascript" src="api.js"></script>
+    <style>
+                #reportSuites { display: none }
+        
+</style>
+    <title></title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Sample: Using APIs to audit report suite settings and show what has changed</h1>
+      <br />
+      <p>Choose file with report suite configuration 
+      <i>if you wish to create new config file leave this</i></p>
+   
+      <input type="file" id="fileInput" />
+      <hr />WS login  <br />
+      <input type='text' id="login" name='login' value="" size="200" />
+      <br /><br />WS secret  <br />
+      <input type='password' id="secret" name='secret' value="" size="200" />
+      <br /><br />WS host Endpoint <br />
+       <input type='text' id="endPoint" name='endPoint' value="api2.omniture.com" size="200" />
+      <br /><br /><br />
+      <button id="getReportSuites" name="getReportSuites" value="get Report Suites">get Report Suites</button>
+      <div id="reportSuites">
+      <br />
+      <select id="reportSuiteSelect"></select> 
+      <button id="getReportSuiteConfiguration" name="getReportSuiteConfiguration" value="get Report Suite configuration">get Report
+      Suite configuration</button></div>
+      <a href="" id="a"></a>
+	  <div id="checkResults">
+	  </div>
+    </div>
+  </body>
+</html>
