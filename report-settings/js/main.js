@@ -16,7 +16,7 @@ var main = (function ($, config) {
 	function getReportSuites() {
 		method = "Company.GetReportSuites";
 		params = "";
-		window.MarketingCloud.makeRequest($(config.userName).val(), $(config.userSecret).val(), method, params, $(config.endPoint).val(), config.callBackReportSuites);
+		window.apiClient.makeRequest($(config.userName).val(), $(config.userSecret).val(), method, params, $(config.endPoint).val(), config.callBackReportSuites);
 	}
 
 	function getReportSuiteConfiguration() {
@@ -26,7 +26,7 @@ var main = (function ($, config) {
 		params.rsid_list[0] = $(config.reportSuiteSelect).val();
 
 		$.each(config.reportSuitesConfigMethods, function (i, method) {
-			window.MarketingCloud.makeRequest($(config.userName).val(), $(config.userSecret).val(), method, params, $(config.endPoint).val(), function (data) {
+			window.apiClient.makeRequest($(config.userName).val(), $(config.userSecret).val(), method, params, $(config.endPoint).val(), function (data) {
 				fillreportSuiteConfigObject(method, data);
 			});
 		});

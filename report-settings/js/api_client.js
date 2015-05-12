@@ -1,5 +1,5 @@
 (function ($) {
-	window.MarketingCloud = {
+	window.apiClient = {
 		/** Make the api request */
 		/* callback should follow standard jQuery request format:
 		 *    function callback(data)
