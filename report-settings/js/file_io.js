@@ -16,7 +16,7 @@ function readSingleFile(event) {
 	}
 }
 
-function downloadSingleFile(text, name, type) {
+function writeSingleFile(text, name, type) {
 
 	var a = document.getElementById("a");
 	var file = new Blob([text], {
