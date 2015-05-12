@@ -63,7 +63,7 @@ function reportSuitesPopulate(data) {
 	$("#reportSuites").fadeIn(500);
 }
 
-//call back for handling report suite conifguration data.
+//call back for handling report suite configuration data.
 function ReportSuiteConfiguration(data) {
 	var reportSuiteCurrentConfig = data;
 	if (typeof window.fileData == "undefined") {
@@ -76,7 +76,7 @@ function ReportSuiteConfiguration(data) {
 			$(mainConfig.resultHolder).append("<h2>" + k.key + "</h2>");
 			}
 			if (k.type == "simple") {
-			$(mainConfig.resultHolder).append("<p> there is a diff: " + k.path + "where old val:" + k.old + "and current val:" + k.current + "</p>");
+			$(mainConfig.resultHolder).append("<p>there is a diff: <b>" + k.path + "</b> where old val: <i>" + k.old + "</i> and current val: <i>" + k.current + "</i></p>");
 			}
 		
 		});
