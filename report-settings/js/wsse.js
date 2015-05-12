@@ -1,24 +1,43 @@
-/*
- *  * A JavaScript implementation of the Secure Hash Algorithm, SHA-1, as defined
- *   * in FIPS PUB 180-1
- *    * Version 2.1 Copyright Paul Johnston 2000 - 2002.
- *     * Other contributors: Greg Holt, Andrew Kepert, Ydnar, Lostinet
- *      * Distributed under the BSD License
- *       * See http://pajhome.org.uk/crypt/md5 for details.
- *        */
+//downloaded from https://github.com/vrruiz/wsse-js/blob/master/wsse.js
+//
+// wsse.js - Generate WSSE authentication header in JavaScript
+// (C) 2005 Victor R. Ruiz <victor*sixapart.com> - http://rvr.typepad.com/
+//
+// Parts:
+//   SHA-1 library (C) 2000-2002 Paul Johnston - BSD license
+//   ISO 8601 function (C) 2000 JF Walker All Rights
+//   Base64 function (C) aardwulf systems - Creative Commons
+// 
+// Example call:
+//
+//   var w = wsseHeader(Username, Password);
+//   alert('X-WSSE: ' + w);
+//
+// Changelog:
+//   2005.07.21 - Release 1.0
+//
 
 /*
- *  * Configurable variables. You may need to tweak these to be compatible with
- *   * the server-side, but the defaults work in most cases.
- *    */
-var hexcase = 0;   /* hex output format. 0 - lowercase; 1 - uppercase        */
+ * A JavaScript implementation of the Secure Hash Algorithm, SHA-1, as defined
+ * in FIPS PUB 180-1
+ * Version 2.1a Copyright Paul Johnston 2000 - 2002.
+ * Other contributors: Greg Holt, Andrew Kepert, Ydnar, Lostinet
+ * Distributed under the BSD License
+ * See http://pajhome.org.uk/crypt/md5 for details.
+ */
+
+/*
+ * Configurable variables. You may need to tweak these to be compatible with
+ * the server-side, but the defaults work in most cases.
+ */
+var hexcase = 0;  /* hex output format. 0 - lowercase; 1 - uppercase        */
 var b64pad  = "="; /* base-64 pad character. "=" for strict RFC compliance   */
-var chrsz   = 8;   /* bits per input character. 8 - ASCII; 16 - Unicode      */
+var chrsz   = 8;  /* bits per input character. 8 - ASCII; 16 - Unicode      */
 
 /*
- *  * These are the functions you'll usually want to call
- *   * They take string arguments and return either hex or base-64 encoded strings
- *    */
+ * These are the functions you'll usually want to call
+ * They take string arguments and return either hex or base-64 encoded strings
+ */
 function hex_sha1(s){return binb2hex(core_sha1(str2binb(s),s.length * chrsz));}
 function b64_sha1(s){return binb2b64(core_sha1(str2binb(s),s.length * chrsz));}
 function str_sha1(s){return binb2str(core_sha1(str2binb(s),s.length * chrsz));}
@@ -27,16 +46,16 @@ function b64_hmac_sha1(key, data){ return binb2b64(core_hmac_sha1(key, data));}
 function str_hmac_sha1(key, data){ return binb2str(core_hmac_sha1(key, data));}
 
 /*
- *  * Perform a simple self-test to see if the VM is working
- *   */
+ * Perform a simple self-test to see if the VM is working
+ */
 function sha1_vm_test()
 {
   return hex_sha1("abc") == "a9993e364706816aba3e25717850c26c9cd0d89d";
 }
 
 /*
- *  * Calculate the SHA-1 of an array of big-endian words, and a bit length
- *   */
+ * Calculate the SHA-1 of an array of big-endian words, and a bit length
+ */
 function core_sha1(x, len)
 {
   /* append padding */
@@ -82,9 +101,9 @@ function core_sha1(x, len)
 }
 
 /*
- *  * Perform the appropriate triplet combination function for the current
- *   * iteration
- *    */
+ * Perform the appropriate triplet combination function for the current
+ * iteration
+ */
 function sha1_ft(t, b, c, d)
 {
   if(t < 20) return (b & c) | ((~b) & d);
@@ -94,8 +113,8 @@ function sha1_ft(t, b, c, d)
 }
 
 /*
- *  * Determine the appropriate additive constant for the current iteration
- *   */
+ * Determine the appropriate additive constant for the current iteration
+ */
 function sha1_kt(t)
 {
   return (t < 20) ?  1518500249 : (t < 40) ?  1859775393 :
@@ -103,8 +122,8 @@ function sha1_kt(t)
 }
 
 /*
- *  * Calculate the HMAC-SHA1 of a key and some data
- *   */
+ * Calculate the HMAC-SHA1 of a key and some data
+ */
 function core_hmac_sha1(key, data)
 {
   var bkey = str2binb(key);
@@ -122,9 +141,9 @@ function core_hmac_sha1(key, data)
 }
 
 /*
- *  * Add integers, wrapping at 2^32. This uses 16-bit operations internally
- *   * to work around bugs in some JS interpreters.
- *    */
+ * Add integers, wrapping at 2^32. This uses 16-bit operations internally
+ * to work around bugs in some JS interpreters.
+ */
 function safe_add(x, y)
 {
   var lsw = (x & 0xFFFF) + (y & 0xFFFF);
@@ -133,41 +152,41 @@ function safe_add(x, y)
 }
 
 /*
- *  * Bitwise rotate a 32-bit number to the left.
- *   */
+ * Bitwise rotate a 32-bit number to the left.
+ */
 function rol(num, cnt)
 {
   return (num << cnt) | (num >>> (32 - cnt));
 }
 
 /*
- *  * Convert an 8-bit or 16-bit string to an array of big-endian words
- *   * In 8-bit function, characters >255 have their hi-byte silently ignored.
- *    */
+ * Convert an 8-bit or 16-bit string to an array of big-endian words
+ * In 8-bit function, characters >255 have their hi-byte silently ignored.
+ */
 function str2binb(str)
 {
   var bin = Array();
   var mask = (1 << chrsz) - 1;
   for(var i = 0; i < str.length * chrsz; i += chrsz)
-    bin[i>>5] |= (str.charCodeAt(i / chrsz) & mask) << (24 - i%32);
+    bin[i>>5] |= (str.charCodeAt(i / chrsz) & mask) << (32 - chrsz - i%32);
   return bin;
 }
 
 /*
- *  * Convert an array of big-endian words to a string
- *   */
+ * Convert an array of big-endian words to a string
+ */
 function binb2str(bin)
 {
   var str = "";
   var mask = (1 << chrsz) - 1;
   for(var i = 0; i < bin.length * 32; i += chrsz)
-    str += String.fromCharCode((bin[i>>5] >>> (24 - i%32)) & mask);
+    str += String.fromCharCode((bin[i>>5] >>> (32 - chrsz - i%32)) & mask);
   return str;
 }
 
 /*
- *  * Convert an array of big-endian words to a hex string.
- *   */
+ * Convert an array of big-endian words to a hex string.
+ */
 function binb2hex(binarray)
 {
   var hex_tab = hexcase ? "0123456789ABCDEF" : "0123456789abcdef";
@@ -181,8 +200,8 @@ function binb2hex(binarray)
 }
 
 /*
- *  * Convert an array of big-endian words to a base-64 string
- *   */
+ * Convert an array of big-endian words to a base-64 string
+ */
 function binb2b64(binarray)
 {
   var tab = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -201,220 +220,157 @@ function binb2b64(binarray)
   return str;
 }
 
-/* Copyright (C) 1999 Masanao Izumo <mo@goice.co.jp>
- *  * Version: 1.0
- *   * LastModified: Dec 25 1999
- *    * This library is free.  You can redistribute it and/or modify it.
- *     */
+// aardwulf systems
+// This work is licensed under a Creative Commons License.
+// http://www.aardwulf.com/tutor/base64/
+function encode64(input) {
+    var keyStr = "ABCDEFGHIJKLMNOP" +
+                "QRSTUVWXYZabcdef" +
+                "ghijklmnopqrstuv" +
+                "wxyz0123456789+/" +
+                "=";
 
-/*
- *  * Interfaces:
- *   * b64 = base64encode(data);
- *    * data = base64decode(b64);
- *     */
+    var output = "";
+    var chr1, chr2, chr3 = "";
+    var enc1, enc2, enc3, enc4 = "";
+    var i = 0;
 
-var Base64 = {
-  EncodeChars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
-  DecodeChars: new Array(
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63,
-    52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1,
-    -1,  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14,
-    15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1,
-    -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-    41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1
-  ),
-
-  encode: function(str) {
-    var out, i, len;
-    var c1, c2, c3;
-
-    len = str.length;
-    i = 0;
-    out = "";
-    while(i < len) {
-    c1 = str.charCodeAt(i++) & 0xff;
-    if(i == len)
-    {
-        out += Base64.EncodeChars.charAt(c1 >> 2);
-        out += Base64.EncodeChars.charAt((c1 & 0x3) << 4);
-        out += "==";
-        break;
-    }
-    c2 = str.charCodeAt(i++);
-    if(i == len)
-    {
-        out += Base64.EncodeChars.charAt(c1 >> 2);
-        out += Base64.EncodeChars.charAt(((c1 & 0x3)<< 4) | ((c2 & 0xF0) >> 4));
-        out += Base64.EncodeChars.charAt((c2 & 0xF) << 2);
-        out += "=";
-        break;
-    }
-    c3 = str.charCodeAt(i++);
-    out += Base64.EncodeChars.charAt(c1 >> 2);
-    out += Base64.EncodeChars.charAt(((c1 & 0x3)<< 4) | ((c2 & 0xF0) >> 4));
-    out += Base64.EncodeChars.charAt(((c2 & 0xF) << 2) | ((c3 & 0xC0) >>6));
-    out += Base64.EncodeChars.charAt(c3 & 0x3F);
-    }
-    return out;
-  },
-
-  decode: function(str) {
-    var c1, c2, c3, c4;
-    var i, len, out;
-
-    len = str.length;
-    i = 0;
-    out = "";
-    while(i < len) {
-    /* c1 */
     do {
-        c1 = Base64.DecodeChars[str.charCodeAt(i++) & 0xff];
-    } while(i < len && c1 == -1);
-    if(c1 == -1)
-        break;
+        chr1 = input.charCodeAt(i++);
+        chr2 = input.charCodeAt(i++);
+        chr3 = input.charCodeAt(i++);
 
-    /* c2 */
-    do {
-        c2 = Base64.DecodeChars[str.charCodeAt(i++) & 0xff];
-    } while(i < len && c2 == -1);
-    if(c2 == -1)
-        break;
+        enc1 = chr1 >> 2;
+        enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+        enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+        enc4 = chr3 & 63;
 
-    out += String.fromCharCode((c1 << 2) | ((c2 & 0x30) >> 4));
-
-    /* c3 */
-    do {
-        c3 = str.charCodeAt(i++) & 0xff;
-        if(c3 == 61)
-        return out;
-        c3 = Base64.DecodeChars[c3];
-    } while(i < len && c3 == -1);
-    if(c3 == -1)
-        break;
-
-    out += String.fromCharCode(((c2 & 0XF) << 4) | ((c3 & 0x3C) >> 2));
-
-    /* c4 */
-    do {
-        c4 = str.charCodeAt(i++) & 0xff;
-        if(c4 == 61)
-        return out;
-        c4 = Base64.DecodeChars[c4];
-    } while(i < len && c4 == -1);
-    if(c4 == -1)
-        break;
-    out += String.fromCharCode(((c3 & 0x03) << 6) | c4);
-    }
-    return out;
-  }
-};
-
-function Wsse(u, s, n, c)
-{
-    this.set = function (u, s, n, c) {
-        this.setUser(u);
-        this.setSecret(s);
-        this.setNonce(n);
-        this.setCreated(c);
-    };
-
-    this.setUser = function (u) {
-        this.u = u;
-    };
-    this.setSecret = function (s) {
-        this.s = s;
-    };
-    this.setNonce = function (n) {
-        this.n = n;
-    };
-    this.setCreated = function (c) {
-        this.c = c;
-    };
-
-    this.generateNonce = function () {
-        var len = 24, chars  = "0123456789abcdef", nonce  = "";
-        for (var i = 0; i < len; i++) {
-            nonce += chars.charAt(Math.floor(Math.random() * chars.length));
+        if (isNaN(chr2)) {
+        enc3 = enc4 = 64;
+        } else if (isNaN(chr3)) {
+        enc4 = 64;
         }
-        return nonce;
-    };
 
-    this.generateCreated = function () {
-        var date = new Date(), y, m, d, h, i, s;
-        y = date.getUTCFullYear();
-        m = (date.getUTCMonth() + 1); if (m < 10) { m = "0" + m; }
-        d = (date.getUTCDate());      if (d < 10) { d = "0" + d; }
-        h = (date.getUTCHours());     if (h < 10) { h = "0" + h; }
-        i = (date.getUTCMinutes());   if (i < 10) { i = "0" + i; }
-        s = (date.getUTCSeconds());   if (s < 10) { s = "0" + s; }
-        return y + "-" + m + "-" + d + "T" + h + ":" + i + ":" + s + "Z";
-    };
+        output = output + 
+        keyStr.charAt(enc1) + 
+        keyStr.charAt(enc2) + 
+        keyStr.charAt(enc3) + 
+        keyStr.charAt(enc4);
+        chr1 = chr2 = chr3 = "";
+        enc1 = enc2 = enc3 = enc4 = "";
+    } while (i < input.length);
 
-    this.encode = function () {
-        var p = {};
-        if (!window.b64_sha1) {
-            alert("b64_sha1() was not found");
-            return p;
-        }
-        p.u = this.u;
-        p.s = this.s;
-        p.n = (this.n ? this.n : this.generateNonce());
-        p.c = (this.c ? this.c : this.generateCreated());
-        p.d = b64_sha1(p.n + p.c + p.s);
-        p.n = Base64.encode(p.n);
-        return p;
-    };
-
-    this.generateRESTHeaders = function () {
-        rval = "";
-
-        var p = this.encode();
-
-        rval = "UsernameToken";
-        rval += " Username=\"" + p.u + "\",";
-        rval += " PasswordDigest=\"" + p.d + "\",";
-        rval += " Nonce=\"" + p.n + "\",";
-        rval += " Created=\"" + p.c + "\"";
-
-        return { 'X-WSSE': rval };
-    };
-
-    this.generateRESTQS = function () {
-        var p = this.encode(), rval = "";
-        rval  = "auth_digest="    + escape(p.d);
-        rval += "&auth_nonce="    + escape(p.n);
-        rval += "&auth_created="  + escape(p.c);
-        rval += "&auth_username=" + escape(p.u);
-        return rval;
-    };
-
-    this.generateSOAPHeaders = function () {
-        var p = this.encode(), rval = "";
-
-        rval  = "<wsse:Security wsse:mustUnderstand=\"1\" xmlns:wsse=\"http://www.omniture.com\">\n";
-        rval += "\t<wsse:UsernameToken wsse:Id=\"User\">\n";
-        rval += "\t\t<wsse:Username>" + p.u + "</wsse:Username>\n";
-        rval += "\t\t\t<wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest\">" + p.d + "</wsse:Password>\n";
-        rval += "\t\t<wsse:Nonce>" + p.n + "</wsse:Nonce>\n";
-        rval += "\t\t<wsse:Created>" + p.c + "</wsse:Created>\n";
-        rval += "\t</wsse:UsernameToken>\n";
-        rval += "</wsse:Security>\n";
-
-        return rval;
-    };
-
-    /** Generate the auth credentials */
-    this.generateAuth = function (username, secret) {
-        var nonce = this.generateNonce();
-        var created = this.generateCreated();
-
-        this.set(username, secret, nonce, created);
-
-        var headers = this.generateRESTHeaders();
-        return headers;
-    };
-
-    this.set(u, s, n, c);
+    return output;
 }
+
+// TITLE
+// TempersFewGit v 2.1 (ISO 8601 Time/Date script) 
+//
+// OBJECTIVE
+// Javascript script to detect the time zone where a browser
+// is and display the date and time in accordance with the 
+// ISO 8601 standard.
+//
+// AUTHOR
+// John Walker 
+// http://321WebLiftOff.net
+// jfwalker@ureach.com
+//
+// ENCOMIUM
+// Thanks to Stephen Pugh for his help.
+//
+// CREATED
+// 2000-09-15T09:42:53+01:00 
+//
+// REFERENCES
+// For more about ISO 8601 see:
+// http://www.w3.org/TR/NOTE-datetime
+// http://www.cl.cam.ac.uk/~mgk25/iso-time.html
+//
+// COPYRIGHT
+// This script is Copyright  2000 JF Walker All Rights 
+// Reserved but may be freely used provided this colophon is 
+// included in full.
+//
+function isodatetime() {
+    var today = new Date();
+    var year  = today.getYear();
+    if (year < 2000)    // Y2K Fix, Isaac Powell
+    year = year + 1900; // http://onyx.idbsu.edu/~ipowell
+    var month = today.getMonth() + 1;
+    var day  = today.getDate();
+    var hour = today.getHours();
+    var hourUTC = today.getUTCHours();
+    var diff = hour - hourUTC;
+    var hourdifference = Math.abs(diff);
+    var minute = today.getMinutes();
+    var minuteUTC = today.getUTCMinutes();
+    var minutedifference;
+    var second = today.getSeconds();
+    var timezone;
+    if (minute != minuteUTC && minuteUTC < 30 && diff < 0) { hourdifference--; }
+    if (minute != minuteUTC && minuteUTC > 30 && diff > 0) { hourdifference--; }
+    if (minute != minuteUTC) {
+    minutedifference = ":30";
+    }
+    else {
+    minutedifference = ":00";
+    }
+    if (hourdifference < 10) { 
+    timezone = "0" + hourdifference + minutedifference;
+    }
+    else {
+    timezone = "" + hourdifference + minutedifference;
+    }
+    if (diff < 0) {
+    timezone = "-" + timezone;
+    }
+    else {
+    timezone = "+" + timezone;
+    }
+    if (month <= 9) month = "0" + month;
+    if (day <= 9) day = "0" + day;
+    if (hour <= 9) hour = "0" + hour;
+    if (minute <= 9) minute = "0" + minute;
+    if (second <= 9) second = "0" + second;
+    time = year + "-" + month + "-" + day + "T"
+    + hour + ":" + minute + ":" + second + timezone;
+    return time;
+}
+
+// (C) 2005 Victor R. Ruiz <victor*sixapart.com>
+// Code to generate WSSE authentication header
+//
+// http://www.sixapart.com/pronet/docs/typepad_atom_api
+//
+// X-WSSE: UsernameToken Username="name", PasswordDigest="digest", Created="timestamp", Nonce="nonce"
+//
+//  * Username- The username that the user enters (the TypePad username).
+//  * Nonce. A secure token generated anew for each HTTP request.
+//  * Created. The ISO-8601 timestamp marking when Nonce was created.
+//  * PasswordDigest. A SHA-1 digest of the Nonce, Created timestamp, and the password
+//    that the user supplies, base64-encoded. In other words, this should be calculated
+//    as: base64(sha1(Nonce . Created . Password))
+//
+
+function wsse(Password) {
+    var PasswordDigest, Nonce, Created;
+    var r = new Array;
+    
+    Nonce = b64_sha1(isodatetime() + 'There is more than words');
+    nonceEncoded = encode64(Nonce);
+    Created = isodatetime();
+    PasswordDigest = b64_sha1(Nonce + Created + Password);
+
+    r[0] = nonceEncoded;
+    r[1] = Created;
+    r[2] = PasswordDigest;
+    return r;
+}
+
+function wsseHeader(Username, Password) {
+    var w = wsse(Password);
+    var header = 'UsernameToken Username="' + Username + '", PasswordDigest="' + w[2] + '", Created="' + w[1] + '", Nonce="' + w[0] + '"';
+    return header;
+}
+
