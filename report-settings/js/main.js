@@ -1,16 +1,17 @@
 (function ($) {
 // provide jQuery selector for credential fields
-var apiConfig = {
+var mainConfig = {
 	userName : "#login",
 	userSecret : "#secret",
 	endPoint : "#endPoint",
 	reportSuiteSelect : "#reportSuiteSelect",
 	callBackReportSuites : reportSuitesPopulate,
 	reportSuitesConfigMethods : ["ReportSuite.GetEvars", "ReportSuite.GetProps"],
-	callBackReportSuiteConfiguration : ReportSuiteConfiguration
+	callBackReportSuiteConfiguration : ReportSuiteConfiguration,
+	resultHolder : "#checkResults"
 };
 
-var api = (function ($, config) {
+var main = (function ($, config) {
 
 	function getReportSuites() {
 		method = "Company.GetReportSuites";
@@ -37,7 +38,7 @@ var api = (function ($, config) {
 		reportSuiteConfigObject[method.replace(".", "")] = JSON.parse(data.responseText);
 
 		if (Object.keys(reportSuiteConfigObject).length == config.reportSuitesConfigMethods.length) {
-			apiConfig.callBackReportSuiteConfiguration(reportSuiteConfigObject);
+			mainConfig.callBackReportSuiteConfiguration(reportSuiteConfigObject);
 		}
 
 	}
@@ -46,13 +47,12 @@ var api = (function ($, config) {
 		getReportSuites : getReportSuites,
 		getReportSuiteConfiguration : getReportSuiteConfiguration
 	}
-})(jQuery, apiConfig);
+})(jQuery, mainConfig);
 
 //prepare functions where you will handle data from API calls
 
 //callback for report suites list
 function reportSuitesPopulate(data) {
-	console.log(data);
 	var reportSuites = JSON.parse(data.responseText);
 	$.each(reportSuites.report_suites, function (i, item) {
 		$('#reportSuiteSelect').append($('<option>', {
@@ -67,17 +67,26 @@ function reportSuitesPopulate(data) {
 function ReportSuiteConfiguration(data) {
 	var reportSuiteCurrentConfig = data;
 	if (typeof window.fileData == "undefined") {
-		writeSingleFile(JSON.stringify(data), $(apiConfig.reportSuiteSelect).val() + Date.now() + ".json", 'text/json');
+		writeSingleFile(JSON.stringify(data), $(mainConfig.reportSuiteSelect).val() + Date.now() + ".json", 'text/json');
 	} else {
 		reportSuiteOldConfig = JSON.parse(window.fileData);
-
-		confChecker(confCheckerConfig, reportSuiteOldConfig, reportSuiteCurrentConfig);
+		confComparatorArg =  {  oldConfig:reportSuiteOldConfig, currentConfig: reportSuiteCurrentConfig };
+		confComparator(confComparatorArg).forEach(function (k) {
+			if (k.type == "header") {
+			$(mainConfig.resultHolder).append("<h2>" + k.key + "</h2>");
+			}
+			if (k.type == "simple") {
+			$(mainConfig.resultHolder).append("<p> there is a diff: " + k.path + "where old val:" + k.old + "and current val:" + k.current + "</p>");
+			}
+		
+		});
+		
 	}
 }
 
 window.onload = function () {
-	document.getElementById('getReportSuites').addEventListener('click', api.getReportSuites, false);
-	document.getElementById('getReportSuiteConfiguration').addEventListener('click', api.getReportSuiteConfiguration, false);
+	document.getElementById('getReportSuites').addEventListener('click', main.getReportSuites, false);
+	document.getElementById('getReportSuiteConfiguration').addEventListener('click', main.getReportSuiteConfiguration, false);
 	document.getElementById('fileInput').addEventListener('change', readSingleFile, false);
 }
 
