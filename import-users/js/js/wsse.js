@@ -1,4 +1,3 @@
-//downloaded from https://github.com/vrruiz/wsse-js/blob/master/wsse.js
 //
 // wsse.js - Generate WSSE authentication header in JavaScript
 // (C) 2005 Victor R. Ruiz <victor*sixapart.com> - http://rvr.typepad.com/
@@ -357,7 +356,7 @@ function wsse(Password) {
     var PasswordDigest, Nonce, Created;
     var r = new Array;
     
-    Nonce = b64_sha1(isodatetime() + 'There is more than words');
+    Nonce = b64_sha1(isodatetime() + ' ' + Math.random());
     nonceEncoded = encode64(Nonce);
     Created = isodatetime();
     PasswordDigest = b64_sha1(Nonce + Created + Password);
