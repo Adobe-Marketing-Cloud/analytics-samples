@@ -57,10 +57,14 @@ public class ImportUsers {
 		request.setGroupName(Arrays.asList(StringUtils.split(record.get("group_names"), '|')));
 
 		System.out.print("Adding user " + request.getEmail() + "... ");
-		if (methods.addLogin(request)) {
-			System.out.println("Success!");
-		} else {
-			System.out.println("Failed!");
+		try {
+			if (methods.addLogin(request)) {
+				System.out.println("success!");
+			} else {
+				System.out.println("failed!");
+			}
+		} catch (ApiException e) {
+			System.out.println("failed: " + e.getMessage());
 		}
 	}
 
