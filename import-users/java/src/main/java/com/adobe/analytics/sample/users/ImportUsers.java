@@ -13,6 +13,7 @@ import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 
 import com.adobe.analytics.client.AnalyticsClient;
+import com.adobe.analytics.client.ApiException;
 import com.adobe.analytics.client.domain.AddLogin;
 import com.adobe.analytics.client.methods.PermissionsMethods;
 
@@ -31,12 +32,11 @@ public class ImportUsers {
 		final AnalyticsClient client = new AnalyticsClient(username, secret, endpoint);
 		final PermissionsMethods methods = new PermissionsMethods(client);
 
-		final CSVParser records;
 		try (final Reader reader = new FileReader(args[0])) {
-			records = CSVFormat.RFC4180.parse(reader);
-		}
-		for (CSVRecord record : records) {
-			importUser(record, methods);
+			final CSVParser records = CSVFormat.RFC4180.withHeader().parse(reader);
+			for (CSVRecord record : records) {
+				importUser(record, methods);
+			}
 		}
 	}
 
