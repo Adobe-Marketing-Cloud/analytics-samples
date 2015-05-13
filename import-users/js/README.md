@@ -1,4 +1,4 @@
-## Sample: Using APIs to audit report suite settings and show what has changed
+## Sample: Using APIs to import users from a CSV file
 
 This sample shows how you can create users in Adobe Analytics based on a uploaded CSV file.
 
