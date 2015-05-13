@@ -3,9 +3,10 @@
 This sample shows how you can create users in Adobe Analytics based on a uploaded CSV file.
 
 Sample relies on:
-* [wsse.js] (source: https://github.com/vrruiz/wsse-js/blob/master/wsse.js)
-* [jQuery] (https://code.jquery.com/jquery-1.11.3.min.js)
-* [Bootstrap] (https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css)
+
+* [wsse.js](https://github.com/vrruiz/wsse-js)
+* [jQuery](https://jquery.com/)
+* [Bootstrap](http://getbootstrap.com/)
 
 ## Requierements 
 * Browser with enabled javascript.
