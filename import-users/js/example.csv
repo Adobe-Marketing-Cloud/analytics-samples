@@ -1,0 +1,2 @@
+email,login,password,first_name,last_name,title,phone_number,rsid,create_dashboards,is_admin,must_change_password,is_temp,temp_start_date,temp_end_date,group_names;
+user.test@cognifide.com,user.test@cognifide.com,test1234,fNameTest,lNameTest,,,cogtestmp,true,false,false,false,null,null,Current Data Users|Web Service Access;
