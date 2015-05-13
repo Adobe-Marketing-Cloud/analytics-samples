@@ -5,17 +5,10 @@
     content="HTML Tidy for HTML5 (experimental) for Windows https://github.com/w3c/tidy-html5/tree/c63cc39" />
     <meta charset="utf-8" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script type="text/javascript" src="file_io.js"></script>
-    <script type="text/javascript" src="wsse.js"></script>
-    <script type="text/javascript" src="api_client.js"></script>
-	<script type="text/javascript" src="conf_comparator.js"></script>
-    <script type="text/javascript" src="main.js"></script>
+    <link rel="stylesheet" href="css/objectDiff.css" />
     <style>
-                #reportSuites { display: none }
-        
-</style>
-    <title></title>
+      #reportSuites { display: none }
+    </style>
   </head>
   <body>
     <div class="container">
@@ -39,8 +32,14 @@
       <button id="getReportSuiteConfiguration" name="getReportSuiteConfiguration" value="get Report Suite configuration">get Report
       Suite configuration</button></div>
       <a href="" id="a"></a>
-	  <div id="checkResults">
-	  </div>
+	  <pre id="checkResults">
+	  </pre>
     </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="js/file_io.js"></script>
+    <script type="text/javascript" src="js/wsse.js"></script>
+    <script type="text/javascript" src="js/api_client.js"></script>
+	<script type="text/javascript" src="js/objectDiff.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
   </body>
 </html>
