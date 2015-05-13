@@ -1,9 +1,9 @@
 package com.adobe.analytics.sample.reportsettings;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.Properties;
 
 import com.adobe.analytics.client.AnalyticsClient;
@@ -63,8 +63,8 @@ public class ReportSuiteSettings {
 
 	private static Properties loadProperties() throws IOException {
 		final Properties properties = new Properties();
-		try (final FileInputStream fis = new FileInputStream(new File("analytics.properties"))) {
-			properties.load(fis);
+		try (final Reader reader = new FileReader("analytics.properties")) {
+			properties.load(reader);
 		} catch (FileNotFoundException e) {
 			System.err.println("Create the analytics.properties file");
 		}
