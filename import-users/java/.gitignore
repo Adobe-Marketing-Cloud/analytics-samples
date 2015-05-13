@@ -1,0 +1,6 @@
+/target
+.project
+.classpath
+.settings
+analytics.properties
+example.csv
