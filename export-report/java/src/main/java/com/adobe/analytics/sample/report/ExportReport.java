@@ -35,17 +35,21 @@ public class ExportReport {
 		final ReportMethods methods = new ReportMethods(client);
 		final ReportResponse reportResponse = getReport(properties, methods);
 		final Report report = reportResponse.getReport();
-		final List<Record> records = flatten(report.getData(), new Record(report.getMetrics().size()));
+		final List<Record> records = flattenReportData(report.getData(), new Record(report.getMetrics()
+				.size() + 1));
 
 		try (final CSVPrinter printer = new CSVPrinter(System.out, CSVFormat.RFC4180)) {
 			printer.printRecord(getHeaders(report));
 			for (Record record : records) {
+				if (!record.isComplete()) {
+					continue;
+				}
 				printer.printRecord(record);
 			}
 		}
 	}
 
-	private static List<Record> flatten(List<ReportData> dataList, Record partialRecord) {
+	private static List<Record> flattenReportData(List<ReportData> dataList, Record partialRecord) {
 		final List<Record> records = new ArrayList<>();
 		for (final ReportData data : dataList) {
 			final Record record = partialRecord.clone();
@@ -54,7 +58,7 @@ public class ExportReport {
 				record.addMetrics(data);
 				records.add(record);
 			} else {
-				records.addAll(flatten(data.getBreakdown(), record));
+				records.addAll(flattenReportData(data.getBreakdown(), record));
 			}
 		}
 		return records;

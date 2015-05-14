@@ -18,16 +18,11 @@ public class Record implements Iterable<String>, Cloneable {
 
 	private int currentElementCount;
 
-	private boolean closed;
-
 	public Record(int totalElementCount) {
 		this.totalElementCount = totalElementCount;
 	}
 
 	public void addElements(ReportData reportData) {
-		if (closed) {
-			throw new IllegalStateException("You already added all elements");
-		}
 		addElement(reportData.getName());
 		addElement(reportData.getYear());
 		addElement(reportData.getMonth());
@@ -38,9 +33,6 @@ public class Record implements Iterable<String>, Cloneable {
 	}
 
 	public void addMetrics(ReportData data) {
-		if (!closed) {
-			close();
-		}
 		for (Double metric : data.getCounts()) {
 			if (metric != null) {
 				metrics.add(Double.toString(metric));
@@ -60,11 +52,8 @@ public class Record implements Iterable<String>, Cloneable {
 		}
 	}
 
-	private void close() {
-		for (int i = currentElementCount; i < totalElementCount + 1; i++) {
-			elements.add("");
-		}
-		closed = true;
+	public boolean isComplete() {
+		return currentElementCount == totalElementCount;
 	}
 
 	@Override
@@ -77,7 +66,6 @@ public class Record implements Iterable<String>, Cloneable {
 		final Record record = new Record(totalElementCount);
 		record.elements.addAll(elements);
 		record.metrics.addAll(metrics);
-		record.closed = closed;
 		record.currentElementCount = currentElementCount;
 		return record;
 	}
