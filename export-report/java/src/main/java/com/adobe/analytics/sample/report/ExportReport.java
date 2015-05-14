@@ -37,11 +37,12 @@ public class ExportReport {
 		final Report report = reportResponse.getReport();
 		final List<Record> records = flattenReportData(report.getData(), new Record(report.getMetrics()
 				.size() + 1));
+		final boolean skipEmpty = Boolean.parseBoolean(properties.getProperty("skipEmpty", "false"));
 
 		try (final CSVPrinter printer = new CSVPrinter(System.out, CSVFormat.RFC4180)) {
 			printer.printRecord(getHeaders(report));
 			for (Record record : records) {
-				if (!record.isComplete()) {
+				if (skipEmpty && !record.isComplete()) {
 					continue;
 				}
 				printer.printRecord(record);
@@ -117,29 +118,29 @@ public class ExportReport {
 
 	private static Iterable<String> getHeaders(Report report) {
 		final List<String> headers = new ArrayList<>();
-		headers.add("Period");
+		headers.add("name");
 
 		final ReportData data = report.getData().get(0);
 		if (data.getYear() != null) {
-			headers.add("Year");
+			headers.add("year");
 		}
 		if (data.getMonth() != null) {
-			headers.add("Month");
+			headers.add("month");
 		}
 		if (data.getDay() != null) {
-			headers.add("Day");
+			headers.add("day");
 		}
 		if (data.getHour() != null) {
-			headers.add("Hour");
+			headers.add("hour");
 		}
 		if (data.getMinute() != null) {
-			headers.add("Minute");
+			headers.add("minute");
 		}
 		for (final ReportElement e : report.getElements()) {
-			headers.add(e.getName());
+			headers.add(e.getId());
 		}
 		for (final ReportMetric m : report.getMetrics()) {
-			headers.add(m.getName());
+			headers.add(m.getId());
 		}
 		return headers;
 	}

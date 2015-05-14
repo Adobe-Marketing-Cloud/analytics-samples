@@ -56,9 +56,12 @@ public class Record implements Iterable<String>, Cloneable {
 		return currentElementCount == totalElementCount;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Iterator<String> iterator() {
-		return IteratorUtils.chainedIterator(elements.iterator(), metrics.iterator());
+		final int elementToFill = (totalElementCount - currentElementCount);
+		return IteratorUtils.chainedIterator(elements.iterator(), new ConstantIterator<>("", elementToFill),
+				metrics.iterator());
 	}
 
 	@Override
@@ -68,5 +71,39 @@ public class Record implements Iterable<String>, Cloneable {
 		record.metrics.addAll(metrics);
 		record.currentElementCount = currentElementCount;
 		return record;
+	}
+
+	private static class ConstantIterator<T> implements Iterator<T> {
+
+		private final T value;
+
+		private final int size;
+
+		private int index;
+
+		public ConstantIterator(T value, int size) {
+			this.value = value;
+			this.size = size;
+		}
+
+		@Override
+		public boolean hasNext() {
+			return index < size;
+		}
+
+		@Override
+		public T next() {
+			if (!hasNext()) {
+				throw new IllegalStateException();
+			}
+			index++;
+			return value;
+		}
+
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+
 	}
 }
