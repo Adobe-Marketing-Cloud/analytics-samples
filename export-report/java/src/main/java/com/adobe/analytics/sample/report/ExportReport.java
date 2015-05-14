@@ -8,12 +8,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
+
 import com.adobe.analytics.client.AnalyticsClient;
 import com.adobe.analytics.client.ApiException;
+import com.adobe.analytics.client.domain.Report;
+import com.adobe.analytics.client.domain.ReportData;
 import com.adobe.analytics.client.domain.ReportDescription;
 import com.adobe.analytics.client.domain.ReportDescriptionDateGranularity;
 import com.adobe.analytics.client.domain.ReportDescriptionElement;
 import com.adobe.analytics.client.domain.ReportDescriptionMetric;
+import com.adobe.analytics.client.domain.ReportElement;
+import com.adobe.analytics.client.domain.ReportMetric;
 import com.adobe.analytics.client.domain.ReportResponse;
 import com.adobe.analytics.client.methods.ReportMethods;
 
@@ -26,32 +33,55 @@ public class ExportReport {
 
 		final AnalyticsClient client = new AnalyticsClient(username, secret, endpoint);
 		final ReportMethods methods = new ReportMethods(client);
-		final ReportResponse report = getReport(properties, methods);
-		System.out.println(report);
+		final ReportResponse reportResponse = getReport(properties, methods);
+		final Report report = reportResponse.getReport();
+		final List<Record> records = flatten(report.getData(), new Record(report.getMetrics().size()));
+
+		try (final CSVPrinter printer = new CSVPrinter(System.out, CSVFormat.RFC4180)) {
+			printer.printRecord(getHeaders(report));
+			for (Record record : records) {
+				printer.printRecord(record);
+			}
+		}
+	}
+
+	private static List<Record> flatten(List<ReportData> dataList, Record partialRecord) {
+		final List<Record> records = new ArrayList<>();
+		for (final ReportData data : dataList) {
+			final Record record = partialRecord.clone();
+			record.addElements(data);
+			if (data.getBreakdown() == null) {
+				record.addMetrics(data);
+				records.add(record);
+			} else {
+				records.addAll(flatten(data.getBreakdown(), record));
+			}
+		}
+		return records;
 	}
 
 	private static ReportResponse getReport(final Properties properties, final ReportMethods methods)
 			throws IOException, InterruptedException, ApiException {
 		final ReportDescription desc = createDesc(properties);
-		System.out.println("Sending queue request...");
+		System.err.println("Sending queue request...");
 		final int reportId = methods.queue(desc);
-		System.out.println("Got report id: " + reportId);
+		System.err.println("Got report id: " + reportId);
 
 		ReportResponse response = null;
-		System.out.println("Sending get request for report " + reportId);
+		System.err.println("Sending get request for report " + reportId);
 		while (response == null) {
 			try {
 				response = methods.get(reportId);
 			} catch (ApiException e) {
 				if ("report_not_ready".equals(e.getError())) {
-					System.out.println("Report not ready yet.");
+					System.err.println("Report not ready yet.");
 					Thread.sleep(3000);
 					continue;
 				}
 				throw e;
 			}
 		}
-		System.out.println("Got report!");
+		System.err.println("Got report!");
 		return response;
 	}
 
@@ -79,6 +109,35 @@ public class ExportReport {
 		}
 		desc.setElements(descElems);
 		return desc;
+	}
+
+	private static Iterable<String> getHeaders(Report report) {
+		final List<String> headers = new ArrayList<>();
+		headers.add("Period");
+
+		final ReportData data = report.getData().get(0);
+		if (data.getYear() != null) {
+			headers.add("Year");
+		}
+		if (data.getMonth() != null) {
+			headers.add("Month");
+		}
+		if (data.getDay() != null) {
+			headers.add("Day");
+		}
+		if (data.getHour() != null) {
+			headers.add("Hour");
+		}
+		if (data.getMinute() != null) {
+			headers.add("Minute");
+		}
+		for (final ReportElement e : report.getElements()) {
+			headers.add(e.getName());
+		}
+		for (final ReportMetric m : report.getMetrics()) {
+			headers.add(m.getName());
+		}
+		return headers;
 	}
 
 	private static Properties loadProperties() throws IOException {
