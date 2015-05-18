@@ -7,7 +7,6 @@ Sample relies on:
 * [wsse.js](https://github.com/vrruiz/wsse-js)
 * [jQuery](https://jquery.com/)
 * [Bootstrap](http://getbootstrap.com/)
-* [CSV.js](https://github.com/okfn/csv.js/)
 * [jQuery Bootstrap Alerts](http://eltimn.github.io/jquery-bs-alerts/)
 
 ## Requierements 

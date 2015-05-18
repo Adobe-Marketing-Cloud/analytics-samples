@@ -7,21 +7,6 @@ var api = (function($, MarketingCloud) {
 		$("#spinner").fadeOut(500);
     }
 
-    function login() {
-        showSpinner();
-		getAnalyticsClient().makeRequest('Company.GetReportSuites', '', function reportSuitesPopulate(data) {
-            hideSpinner();
-			$("#logged-in").fadeIn(500);
-            $("#credentials").fadeOut(500);
-		}).fail(function(data) {
-			hideSpinner();
-            $(document).trigger("add-alerts", {
-                message: data.responseJSON.error_description,
-                priority: "error"
-            });
-        });
-    }
-
 	function importUsers(csvContents) {
 		if (!csvContents) {
             $(document).trigger("add-alerts", {
@@ -98,7 +83,6 @@ var api = (function($, MarketingCloud) {
         $('#createusers').on('click', function() {
             importUsers(csvContents);
         });
-        $('#sign-in').on('click', login);
     });
 
 })(jQuery, window.MarketingCloud);
