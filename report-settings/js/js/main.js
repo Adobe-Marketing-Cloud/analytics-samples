@@ -5,6 +5,7 @@
     function fillReportsSelect() {
         getAnalyticsClient().makeRequest('Company.GetReportSuites', '', function reportSuitesPopulate(data) {
             var $select = $('#reportSuiteSelect');
+				$select.find('option').remove().end();
             $.each(data.report_suites, function() {
                 var $option = $('<option>', {
                     value: this.rsid,
@@ -17,6 +18,7 @@
     }
 
     function getReportSuiteConfiguration() {
+		$("#spinner").fadeIn("slow");
         var rsid = $('#reportSuiteSelect').val(),
             requests,
             analyticsClient = getAnalyticsClient();
@@ -30,8 +32,10 @@
                 newConfig[this.replace('.', '')] = results[i][0];
             });
             if (oldConfig) {
+				$("#spinner").fadeOut("slow");
                 displayDifferences(newConfig);
             } else {
+				$("#spinner").fadeOut("slow");
                 saveConfiguration(newConfig);
             }
         });
