@@ -7,6 +7,8 @@ Sample relies on:
 * [wsse.js](https://github.com/vrruiz/wsse-js)
 * [jQuery](https://jquery.com/)
 * [Bootstrap](http://getbootstrap.com/)
+* [csv] (https://github.com/okfn/csv.js/)
+
 
 ## Requierements 
 * Browser with enabled javascript.

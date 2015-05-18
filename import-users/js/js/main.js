@@ -12,13 +12,16 @@ var api = (function($, config, MarketingCloud) {
 			return;
 		}
 
-		var user, 
+		var user,
+			deferred,
+			deferreds = [], 
 			userGroups, 
 			users = window.csvContents.split('\r\n'), 
 			userJSON, 
 			userJSONkey = users[0].split(','); //csv header serves for JSON keys
 
 		users.splice(0, 1)//remove the csv header
+		users.splice(users.length-1, 1);//remove the last row as it is always ""
 
 		$.each(users, function(i, v) {
 			userJSON = {};
@@ -28,16 +31,27 @@ var api = (function($, config, MarketingCloud) {
 				userJSON[userJSONkey[i]] = user[i]
 			}
 			userJSON['group_names'] = userGroups;
-			createUser(userJSON);
+			deferred = createUser(userJSON);
+			deferreds.push(deferred);
 		})
+		console.log(deferreds);
+		$.when.apply($, deferreds).then(function() {
+			$('#spinner').fadeOut("slow");
+		},function() {
+			$('#spinner').fadeOut("slow");
+		});
 	}
 
 	function createUser(user) {
-		MarketingCloud.getAnalyticsClient($(config.userName).val(), $(config.userSecret).val(), $(config.endpoint).val()).makeRequest("Permissions.AddLogin", user, function() {
+		var deferred = MarketingCloud.getAnalyticsClient($(config.userName).val(), $(config.userSecret).val(), $(config.endpoint).val()).makeRequest("Permissions.AddLogin", user, function() {
 			console.log("The user " + user.login + " has been created.");
 		}, function(data) {
 			console.log("The user " + user.login + " has not been created. The error was: " + data.responseText);
+		}, function() {
+			$('#spinner').fadeIn("slow");
 		});
+		
+		return deferred;
 	}
 
 	return {
