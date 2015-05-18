@@ -1,109 +1,79 @@
-(function () {
+(function ($) {
 	window.MarketingCloud = window.MarketingCloud || {};
-	window.MarketingCloud.parseReport = parse;
-	window.MarketingCloud.getColHeaders = getColHeaders;
 
-	function parse(reportData) {
-		goutput = [];
-		var data = reportData.data;
-
-		goutput = getRows(data, {
-				elements : [],
-				metrics : []
-			});
-
-		goutput = fixElementsLength(goutput, reportData);
-
-		return populateRows(goutput);
+	window.MarketingCloud.parseReport = function(reportData) {
+		var data = reportData.data,
+            rows = getRows(data, {
+            elements : [],
+            metrics : []
+        });
+		fixElementsLength(rows, reportData);
+		return flatten(rows);
 	}
 
-	function getColHeaders(jsonObj) {
-		var metricsLength = jsonObj.metrics.length,
-		elementsLength = jsonObj.elements.length,
-		output = [];
+	window.MarketingCloud.getColHeaders = function(report) {
+		var metricsLength = report.metrics.length,
+            elementsLength = report.elements.length,
+            output = [];
 
-		for (var property in jsonObj.data[0]) {
-			if (jsonObj.data[0].hasOwnProperty(property)) {
-				if (typeof jsonObj.data[0][property] != "object") {
-					output.push({
-						id : property
-					});
-				}
-			}
-		}
-
-		jsonObj.elements.forEach(function (k) {
-			output.push({
-				id : k.id
-			});
-		});
-
-		jsonObj.metrics.forEach(function (k) {
-			output.push({
-				id : k.id
-			});
-		});
+        $.each(report.data[0], function(key, value) {
+            if (typeof value != 'object') {
+                output.push(key);
+            }
+        });
+        output = output.concat($.map(report.elements, function(element) {
+            return element.id;
+        }));
+        output = output.concat($.map(report.metrics, function(metric) {
+            return metric.id;
+        }));
 		return output;
 
 	}
 
-	function getRecordLength(jsonObj) {
-		var elementsLength = jsonObj.elements.length,
-		dataLength = 0;
-		for (var property in jsonObj.data[0]) {
-			if (jsonObj.data[0].hasOwnProperty(property)) {
-				if (typeof jsonObj.data[0][property] != "object") {
-					dataLength++;
-				}
-			}
-		}
-
-		return dataLength + elementsLength;
+	function getRecordLength(report) {
+		var recordLength = report.elements.length;
+        $.each(report.data[0], function(i, v) {
+            if (typeof v != 'object') {
+                recordLength++;
+            }
+        });
+		return recordLength;
 	}
 
-	function fixElementsLength(records, jsonObj) {
-		recordElementLength = getRecordLength(jsonObj);
-		records.forEach(function (record) {
-			for (; record.elements.length < recordElementLength; ) {
+	function fixElementsLength(records, report) {
+		var recordElementLength = getRecordLength(report);
+        $.each(records, function(i, record) {
+            for (; record.elements.length < recordElementLength;) {
 				record.elements.push("");
 			}
-		});
-		return records;
+        });
 	}
 
-	function populateRows(records) {
-
+	function flatten(records) {
 		var output = [];
-		records.forEach(function (record) {
+		$.each(records, function(i, record) {
 			output.push(record.elements.concat(record.metrics));
 		});
 		return output;
 	}
 
-	function getRows(jsonObj, partialRecord) {
+	function getRows(report, partialRecord) {
 		var rows = [];
-		jsonObj.forEach(function (dataRow) {
-			var record = JSON.parse(JSON.stringify(partialRecord));
-			for (var property in dataRow) {
-				if (dataRow.hasOwnProperty(property)) {
-					if (typeof dataRow[property] != "object" && property != "url") {
-						record.elements.push(dataRow[property]);
-					} else {
-						if (property == "breakdown") {
-							var subRows = getRows(dataRow[property], record);
-							rows = rows.concat(subRows);
-						}
-					}
-				}
-			}
-			if (!dataRow.breakdown) {
+        $.each(report, function(index, dataRow) {
+			var record = JSON.parse(JSON.stringify(partialRecord)); //clone
+            $.each(dataRow, function(key, value) {
+                if (typeof value != "object" && key != "url") {
+                    record.elements.push(value);
+                }
+            });
+            if (dataRow.breakdown) {
+                rows = rows.concat(getRows(dataRow.breakdown, record));
+            } else {
 				record.metrics = dataRow.counts;
 				rows.push(record);
 			}
-
 		});
-
 		return rows;
 	}
-
-})();
+})(jQuery);
