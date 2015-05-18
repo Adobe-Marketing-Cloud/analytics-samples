@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta name="generator"
+    content="HTML Tidy for HTML5 (experimental) for Windows https://github.com/w3c/tidy-html5/tree/c63cc39" />
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="js/file_io.js"></script>
+    <script type="text/javascript" src="js/wsse.js"></script>
+    <script type="text/javascript" src="js/api_client.js"></script>
+	<script type="text/javascript" src="js/csv.js"></script>
+	<script type="text/javascript" src="js/reportParser.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+    <style>
+                #reportSuites { display: none }
+				#spinner  { display: none }
+        
+</style>
+    <title></title>
+  </head>
+  <body>
+    <div id="content" class="container">
+      <h1>Sample: Turning a report into a CSV</h1>
+     
+      <hr />WS login  <br />
+      <input type='text' id="login" name='login' value="" size="200" />
+      <br /><br />WS secret  <br />
+      <input type='password' id="secret" name='secret' value="" size="200" />
+      <br /><br />WS host Endpoint <br />
+       <input type='text' id="endPoint" name='endPoint' value="api2.omniture.com" size="200" />
+      <br /><br /><br />
+      <button id="getReportSuites" name="getReportSuites" value="get Report Suites">get Report Suites</button>
+      <div id="reportSuites">
+      <br />
+      <div id="spinner" > <div class="text-center"> <i class="fa fa-spinner fa-5x fa-pulse"></i> </div></div>
+      <br />
+      Report Suite <select id="reportSuiteSelect"></select> 
+	  <br /> <br /> Metrics <i>(use , as delimeter)</i> <br />
+	  <input type='text' id="metrics" name='metrics' value="" size="200" />
+	  	  <br /> <br /> elements(dimensions) <i>(use , as delimeter)</i><br />
+	  <input type='text' id="elements" name='elements' value="" size="200" />
+	  <br /><br /> date from <i>(YYYY-MM-DD)</i> <br />
+	  <input type="text" id="dateFrom" name="dateFrom" value="2015-04-01" />
+	  <br /><br /> date to <i>(YYYY-MM-DD) </i> <br />
+	  <input type="text" id="dateTo" name="dateTo" value="2015-04-30" />
+	  <br /><br /> granuality <br />
+	  <select id="granuality" name="granuality" /> 
+	  <option value="Hour">Hour</option>
+	  <option value="Day">Day</option>
+	  <option value="Week">Week</option>
+	  <option value="Month">Month</option>
+	  <option value="Quarter">Quarter</option>
+	  <option value="Year">Year</option>
+	  </select>
+      <button id="getReport" name="getReport" value="get Report">get Report</button></div>
+      <a href="" id="a"></a>
+	  <div id="checkResults">
+	  </div>
+    </div>
+  </body>
+</html>
