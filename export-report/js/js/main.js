@@ -15,7 +15,6 @@
     }
   
 	function fillReportsSelect() {
-        $("#credentials").fadeOut(500);
         showSpinner();
 		getAnalyticsClient().makeRequest('Company.GetReportSuites', '', function reportSuitesPopulate(data) {
 			var $select = $('#reportSuiteSelect');
@@ -27,9 +26,16 @@
 					});
 				$select.append($option);
 			});
-			$("#logged-in").fadeIn(500);
             hideSpinner();
-		});
+			$("#logged-in").fadeIn(500);
+            $("#credentials").fadeOut(500);
+		}).fail(function(data) {
+            $(document).trigger("add-alerts", {
+                message: data.responseJSON.error_description,
+                priority: "error"
+            });
+			hideSpinner();
+        });
 	}
 
 	function orderReport() {
@@ -45,7 +51,10 @@
 		}
         showSpinner();
 		getAnalyticsClient().makeRequest("Report.Queue", params, getReportData).fail(function(data) {
-			alert(data.responseJSON.error_description);
+            $(document).trigger("add-alerts", {
+                message: data.responseJSON.error_description,
+                priority: "error"
+            });
 			hideSpinner();
 		});
 	}
@@ -56,7 +65,10 @@
 				setTimeout(getReportData.bind(this, reportIdObj), 1500);
 			}
 			else {
-                alert(reportData.responseJSON.error_description);
+                $(document).trigger("add-alerts", {
+                    message: data.responseJSON.error_description,
+                    priority: "error"
+                });
                 hideSpinner();
 			}
 		}).done(function() {

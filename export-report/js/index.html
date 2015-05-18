@@ -5,12 +5,14 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/file_io.js"></script>
     <script type="text/javascript" src="js/wsse.js"></script>
     <script type="text/javascript" src="js/api_client.js"></script>
     <script type="text/javascript" src="js/csv.js"></script>
     <script type="text/javascript" src="js/reportParser.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="js/jquery.bsAlerts.min.js"></script>
     <style>
       #logged-in { display: none }
       #spinner  { display: none }
@@ -20,7 +22,9 @@
 
   <body>
     <div class="container">
-      <h1>Export report</h1>
+      <h1>Export report <span id="spinner"><i class="fa fa-spinner fa-1x fa-pulse"></i></span></h1>
+
+      <div data-alerts="alerts"></div>
 
       <div class="panel panel-default" id="credentials">
         <div class="panel-heading">
@@ -98,9 +102,6 @@
         </div>
 
         <button id="getReport" class="btn btn-success">Get report</button>
-
-        <div id="checkResults">
-        </div>
       </div>
     </div>
   </body>
