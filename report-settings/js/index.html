@@ -2,47 +2,89 @@
 <html lang="en-US">
   <head>
     <meta charset="utf-8" />
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/objectDiff.css" />
-	<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/objectDiff.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/file_io.js"></script>
     <script type="text/javascript" src="js/wsse.js"></script>
     <script type="text/javascript" src="js/api_client.js"></script>
-	<script type="text/javascript" src="js/objectDiff.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="js/jquery.bsAlerts.min.js"></script>
+    <script type="text/javascript" src="js/objectDiff.js"></script>
     <style>
-      #reportSuites { display: none }
-	  #spinner  { display: none }
+      #logged-in { display: none }
+      #spinner  { display: none }
+      #diff { display: none }
     </style>
+    <title>Report suite settings</title>
   </head>
+
   <body>
     <div class="container">
-      <h1>Sample: Using APIs to audit report suite settings and show what has changed</h1>
-      <br />
-      <p>Choose file with report suite configuration 
-      <i>if you wish to create new config file leave this</i></p>
-   
-      <input type="file" id="fileInput" />
-      <hr />WS login  <br />
-      <input type='text' id="login" name='login' value="" size="200" />
-      <br /><br />WS secret  <br />
-      <input type='password' id="secret" name='secret' value="" size="200" />
-      <br /><br />WS host Endpoint <br />
-       <input type='text' id="endPoint" name='endPoint' value="api2.omniture.com" size="200" />
-      <br /><br /><br />
-      <button id="getReportSuites" name="getReportSuites" value="get Report Suites">get Report Suites</button>
-      <div id="reportSuites">
-      <br />
+      <h1>Report suite settings <span id="spinner"><i class="fa fa-spinner fa-1x fa-pulse"></i></span></h1>
 
-      <select id="reportSuiteSelect"></select> 
-	  	       <div id="spinner" > <div class="text-center"> <i class="fa fa-spinner fa-5x fa-pulse"></i> </div></div>
-		   </br >
-      <button id="getReportSuiteConfiguration" name="getReportSuiteConfiguration" value="get Report Suite configuration">get Report
-      Suite configuration</button></div>
-      <a href="" id="a"></a>
-	  <pre id="checkResults">
-	  </pre>
+      <div data-alerts="alerts"></div>
+
+      <div class="panel panel-default" id="credentials">
+        <div class="panel-heading">
+          <h3 class="panel-title">Credentials</h3>
+        </div>
+        <div class="panel-body">
+          <div class="form-group">
+            <label>Username</label>
+            <input class="form-control" type='text' id="login"/>
+          </div>
+
+          <div class="form-group">
+            <label>Secret</label>
+            <input class="form-control" type='password' id="secret"/>
+          </div>
+
+          <div class="form-group">
+            <label>Endpoint</label>
+            <select id="endPoint" class="form-control">
+              <option value="api.omniture.com">San Jose - Production</option>
+              <option value="api2.omniture.com">Dallas - Production</option>
+              <option value="api3.omniture.com">London - Production</option>
+              <option value="api5.omniture.com">Portland - Production</option>
+              <option value="api4.omniture.com">Singapore - Production</option>
+              <option value="beta-api.omniture.com">San Jose - Beta</option>
+              <option value="beta-api2.omniture.com">Dallas - Beta</option>
+              <option value="api-sbx1.omniture.com">Sandbox</option>
+            </select>
+          </div>
+          <button id="getReportSuites" class="btn btn-success">Sign in</button>
+        </div>
+      </div>
+
+      <div id="logged-in">
+        <div class="form-group">
+          <label>Report suite</label>
+          <select id="reportSuiteSelect" class="form-control">
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Settings file to compare</label>
+          <input id="fileInput" class="form-control" type="file"/>
+          <p class="help-block">If you choose a previously exported file, the application will compare it with the current settings and display the results. Otherwise, if the file input is empty, you'll be able to download the configuration JSON.</p>
+        </div>
+
+        <button id="getReportSuiteConfiguration" class="btn btn-success">Get report suite configuration</button>
+
+        <p></p>
+          
+        <div class="panel panel-default" id="diff">
+          <div class="panel-heading">
+            <h3 class="panel-title">Settings comparison</h3>
+          </div>
+          <div class="panel-body">
+            <pre id="diff-results"></pre>
+          </div>
+        </div>
+      </div>
     </div>
   </body>
 </html>
