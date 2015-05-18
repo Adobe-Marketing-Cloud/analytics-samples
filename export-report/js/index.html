@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-US">
   <head>
-    <meta name="generator"
-    content="HTML Tidy for HTML5 (experimental) for Windows https://github.com/w3c/tidy-html5/tree/c63cc39" />
     <meta charset="utf-8" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
@@ -10,54 +8,100 @@
     <script type="text/javascript" src="js/file_io.js"></script>
     <script type="text/javascript" src="js/wsse.js"></script>
     <script type="text/javascript" src="js/api_client.js"></script>
-	<script type="text/javascript" src="js/csv.js"></script>
-	<script type="text/javascript" src="js/reportParser.js"></script>
+    <script type="text/javascript" src="js/csv.js"></script>
+    <script type="text/javascript" src="js/reportParser.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
     <style>
-                #reportSuites { display: none }
-				#spinner  { display: none }
-        
-</style>
-    <title></title>
+      #logged-in { display: none }
+      #spinner  { display: none }
+    </style>
+    <title>Export report</title>
   </head>
+
   <body>
-    <div id="content" class="container">
-      <h1>Sample: Turning a report into a CSV</h1>
-     
-      <hr />WS login  <br />
-      <input type='text' id="login" name='login' value="" size="200" />
-      <br /><br />WS secret  <br />
-      <input type='password' id="secret" name='secret' value="" size="200" />
-      <br /><br />WS host Endpoint <br />
-       <input type='text' id="endPoint" name='endPoint' value="api2.omniture.com" size="200" />
-      <br /><br /><br />
-      <button id="getReportSuites" name="getReportSuites" value="get Report Suites">get Report Suites</button>
-      <div id="reportSuites">
-      <br />
-      <div id="spinner" > <div class="text-center"> <i class="fa fa-spinner fa-5x fa-pulse"></i> </div></div>
-      <br />
-      Report Suite <select id="reportSuiteSelect"></select> 
-	  <br /> <br /> Metrics <i>(use , as delimeter)</i> <br />
-	  <input type='text' id="metrics" name='metrics' value="" size="200" />
-	  	  <br /> <br /> elements(dimensions) <i>(use , as delimeter)</i><br />
-	  <input type='text' id="elements" name='elements' value="" size="200" />
-	  <br /><br /> date from <i>(YYYY-MM-DD)</i> <br />
-	  <input type="text" id="dateFrom" name="dateFrom" value="2015-04-01" />
-	  <br /><br /> date to <i>(YYYY-MM-DD) </i> <br />
-	  <input type="text" id="dateTo" name="dateTo" value="2015-04-30" />
-	  <br /><br /> granuality <br />
-	  <select id="granuality" name="granuality" /> 
-	  <option value="Hour">Hour</option>
-	  <option value="Day">Day</option>
-	  <option value="Week">Week</option>
-	  <option value="Month">Month</option>
-	  <option value="Quarter">Quarter</option>
-	  <option value="Year">Year</option>
-	  </select>
-      <button id="getReport" name="getReport" value="get Report">get Report</button></div>
-      <a href="" id="a"></a>
-	  <div id="checkResults">
-	  </div>
+    <div class="container">
+      <h1>Export report</h1>
+
+      <div class="panel panel-default" id="credentials">
+        <div class="panel-heading">
+          <h3 class="panel-title">Credentials</h3>
+        </div>
+        <div class="panel-body">
+          <div class="form-group">
+            <label>Username</label>
+            <input class="form-control" type='text' id="login"/>
+          </div>
+
+          <div class="form-group">
+            <label>Secret</label>
+            <input class="form-control" type='password' id="secret"/>
+          </div>
+
+          <div class="form-group">
+            <label>Endpoint</label>
+            <select id="endPoint" class="form-control">
+              <option value="api.omniture.com">San Jose - Production</option>
+              <option value="api2.omniture.com">Dallas - Production</option>
+              <option value="api3.omniture.com">London - Production</option>
+              <option value="api5.omniture.com">Portland - Production</option>
+              <option value="api4.omniture.com">Singapore - Production</option>
+              <option value="beta-api.omniture.com">San Jose - Beta</option>
+              <option value="beta-api2.omniture.com">Dallas - Beta</option>
+              <option value="api-sbx1.omniture.com">Sandbox</option>
+            </select>
+          </div>
+          <button id="getReportSuites" class="btn btn-success">Sign in</button>
+        </div>
+      </div>
+
+      <div id="spinner"><div class="text-center"><i class="fa fa-spinner fa-5x fa-pulse"></i></div></div>
+
+      <div id="logged-in">
+        <div class="form-group">
+          <label>Report suite</label>
+          <select id="reportSuiteSelect" class="form-control">
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Metrics</label>
+          <input class="form-control" type='text' id="metrics"/>
+          <p class="help-block">Separate them with comma, eg.: <code>event1,event2</code>.</p>
+        </div>
+
+        <div class="form-group">
+          <label>Elements (dimensions)</label>
+          <input class="form-control" type='text' id="elements"/>
+          <p class="help-block">Separate them with comma, eg.: <code>eVar1,eVar7</code>.</p>
+        </div>
+
+        <div class="form-group">
+          <label>Date from</label>
+          <input class="form-control" type='date' id="dateFrom"/>
+        </div>
+
+        <div class="form-group">
+          <label>Date to</label>
+          <input class="form-control" type='date' id="dateTo"/>
+        </div>
+
+        <div class="form-group">
+          <label>Granularity</label>
+          <select id="granuality" class="form-control">
+            <option>Hour</option>
+            <option>Day</option>
+            <option>Week</option>
+            <option>Month</option>
+            <option>Quarter</option>
+            <option>Year</option>
+          </select>
+        </div>
+
+        <button id="getReport" class="btn btn-success">Get report</button>
+
+        <div id="checkResults">
+        </div>
+      </div>
     </div>
   </body>
 </html>
