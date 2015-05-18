@@ -6,8 +6,8 @@ Samples on using Analytics APIs
 Application that exports a report into CSV file.
 
 * Code
-** [Java](https://github.com/Adobe-Marketing-Cloud/analytics-samples/tree/master/export-report/java)
-** [JS](https://github.com/Adobe-Marketing-Cloud/analytics-samples/tree/master/export-report/js)
+  * [Java](https://github.com/Adobe-Marketing-Cloud/analytics-samples/tree/master/export-report/java)
+  * [JS](https://github.com/Adobe-Marketing-Cloud/analytics-samples/tree/master/export-report/js)
 * [See the JS version online](http://adobe-marketing-cloud.github.io/analytics-samples/export-report/js/)
 
 ## Import users
@@ -15,8 +15,8 @@ Application that exports a report into CSV file.
 This application imports users from a CSV file.
 
 * Code
-** [Java](https://github.com/Adobe-Marketing-Cloud/analytics-samples/tree/master/import-users/java)
-** [JS](https://github.com/Adobe-Marketing-Cloud/analytics-samples/tree/master/import-users/js)
+  * [Java](https://github.com/Adobe-Marketing-Cloud/analytics-samples/tree/master/import-users/java)
+  * [JS](https://github.com/Adobe-Marketing-Cloud/analytics-samples/tree/master/import-users/js)
 * [See the JS version online](http://adobe-marketing-cloud.github.io/analytics-samples/import-users/js/)
 
 ## Report settings
@@ -24,6 +24,6 @@ This application imports users from a CSV file.
 This application gathers report suite configuration and saves it on disk as a JSON file.
 
 * Code
-** [Java](https://github.com/Adobe-Marketing-Cloud/analytics-samples/tree/master/report-settings/java)
-** [JS](https://github.com/Adobe-Marketing-Cloud/analytics-samples/tree/master/report-settings/js)
+  * [Java](https://github.com/Adobe-Marketing-Cloud/analytics-samples/tree/master/report-settings/java)
+  * [JS](https://github.com/Adobe-Marketing-Cloud/analytics-samples/tree/master/report-settings/js)
 * [See the JS version online](http://adobe-marketing-cloud.github.io/analytics-samples/report-settings/js/)
