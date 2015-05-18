@@ -1,72 +1,57 @@
-var apiConfig = {
-	userName : '#login',
-	userSecret : '#secret',
-	endpoint : '#endpoint'
-}
-
-var api = (function($, config, MarketingCloud) {
-
-	function prepareUserObjects() {
-		if (!window.csvContents) {
-			console.log('Your CSV file appears to be empty.')
+var api = (function($, MarketingCloud) {
+	function importUsers(csvContents) {
+		if (!csvContents) {
+			alert('Your CSV file appears to be empty.')
 			return;
 		}
 
-		var user,
-			deferred,
-			deferreds = [], 
-			userGroups, 
-			users = window.csvContents.split('\r\n'), 
-			userJSON, 
-			userJSONkey = users[0].split(','); //csv header serves for JSON keys
+        var analyticsClient = MarketingCloud.getAnalyticsClient($('#login').val(), $('#secret').val(), $('#endpoint').val()),
+            deferreds = [],
+			lines = $.map(csvContents.split('\n'), $.trim),
+			csvHeader = lines.splice(0, 1)[0].split(','),
+            counter = 0;
 
-		users.splice(0, 1)//remove the csv header
-		users.splice(users.length-1, 1);//remove the last row as it is always ""
+        $('#spinner').fadeIn("slow");
 
-		$.each(users, function(i, v) {
-			userJSON = {};
-			user = v.split(',');
-			userGroups = user[user.length - 1].split('|');
-			for ( i = 0; i < user.length; i++) {
-				userJSON[userJSONkey[i]] = user[i]
+		$.each(lines, function(lineIndex, line) {
+            if (line.length == 0) {
+                return;
+            }
+
+			var userJson = {},
+                row = line.split(',');
+			for (var i = 0; i < row.length; i++) {
+				userJson[csvHeader[i]] = row[i]
 			}
-			userJSON['group_names'] = userGroups;
-			deferred = createUser(userJSON);
-			deferreds.push(deferred);
-		})
-		console.log(deferreds);
-		$.when.apply($, deferreds).then(function() {
-			$('#spinner').fadeOut("slow");
-		},function() {
-			$('#spinner').fadeOut("slow");
+			userJson['group_names'] = userJson['group_names'].split('|');
+			deferreds.push(createUser(analyticsClient, userJson));
 		});
+
+        $.each(deferreds, function() {
+            this.always(function() {
+                if (++counter == deferreds.length) {
+                    $('#spinner').fadeOut("slow");
+                }
+            });
+        });
 	}
 
-	function createUser(user) {
-		var deferred = MarketingCloud.getAnalyticsClient($(config.userName).val(), $(config.userSecret).val(), $(config.endpoint).val()).makeRequest("Permissions.AddLogin", user, function() {
-			console.log("The user " + user.login + " has been created.");
-		}, function(data) {
-			console.log("The user " + user.login + " has not been created. The error was: " + data.responseText);
-		}, function() {
-			$('#spinner').fadeIn("slow");
-		});
-		
-		return deferred;
+	function createUser(analyticsClient, user) {
+		return analyticsClient.makeRequest("Permissions.AddLogin", user);
 	}
 
-	return {
-		prepareUserObjects : prepareUserObjects
-	}
+    $(function() {
+        var csvContents;
+        $('#fileinput').change(function(e) {
+            MarketingCloud.fileSupport.readFile(this, function(contents) {
+                csvContents = contents;
+            }, function(err) {
+                alert(err);
+            })
+        });
+        $('#createusers').on('click', function() {
+            importUsers(csvContents);
+        });
+    });
 
-})(jQuery, apiConfig, window.MarketingCloud);
-
-window.onload = function() {
-	$('#fileinput').change(function(e) {
-		MarketingCloud.fileSupport.readFile(this, function(contents) {
-			window.csvContents = contents;
-		}, function(err) {
-			alert(err);
-		})
-	});
-	$('#createusers').on('click', api.prepareUserObjects);
-}
+})(jQuery, window.MarketingCloud);
