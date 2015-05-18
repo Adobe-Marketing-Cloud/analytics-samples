@@ -1,40 +1,70 @@
-<html>
-	<head>
-		<meta name="generator"
-		content="HTML Tidy for HTML5 (experimental) for Windows https://github.com/w3c/tidy-html5/tree/c63cc39" />
-		<meta charset="utf-8" />
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-		<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="js/wsse.js"></script>
-		<script type="text/javascript" src="js/api_client.js"></script>
-		<script type="text/javascript" src="js/file_io.js" ></script>
-		<script type="text/javascript" src="js/main.js" ></script>
-		<style>
-				#spinner  { display: none }
-		</style>
-	</head>
-	<body>
-		<div class="container">
-		<h1>Sample: Uploading a CSV file with a list of users to be created in Adobe Analytics</h1>
-		
-		Your login:
-		<input type="text" name="login" id="login" size="150" value="">
-		<br>
-		Your secret:
-		<input type="password" name="secret" id="secret" size="150" value="">
-		<br>
-		Endpoint:
-		<input type="text" name="endpoint" id="endpoint" size="150" value="api2.omniture.com">
-		<br>
-		Select a CSV file:
-		<input type="file" id="fileinput" />
-		<br>
-		<button type="button" id="createusers">
-			Create users
-		</button>
-		<br>
-		</div>
-		<div id="spinner" > <div class="text-center"> <i class="fa fa-spinner fa-5x fa-pulse"></i> </div></div>
-	</body>
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/file_io.js"></script>
+    <script type="text/javascript" src="js/wsse.js"></script>
+    <script type="text/javascript" src="js/api_client.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="js/jquery.bsAlerts.min.js"></script>
+    <style>
+      #logged-in { display: none }
+      #spinner  { display: none }
+    </style>
+    <title>Import users</title>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>Import users</h1>
+
+      <div data-alerts="alerts"></div>
+
+      <div class="panel panel-default" id="credentials">
+        <div class="panel-heading">
+          <h3 class="panel-title">Credentials</h3>
+        </div>
+        <div class="panel-body">
+          <div class="form-group">
+            <label>Username</label>
+            <input class="form-control" type='text' id="login"/>
+          </div>
+
+          <div class="form-group">
+            <label>Secret</label>
+            <input class="form-control" type='password' id="secret"/>
+          </div>
+
+          <div class="form-group">
+            <label>Endpoint</label>
+            <select id="endPoint" class="form-control">
+              <option value="api.omniture.com">San Jose - Production</option>
+              <option value="api2.omniture.com">Dallas - Production</option>
+              <option value="api3.omniture.com">London - Production</option>
+              <option value="api5.omniture.com">Portland - Production</option>
+              <option value="api4.omniture.com">Singapore - Production</option>
+              <option value="beta-api.omniture.com">San Jose - Beta</option>
+              <option value="beta-api2.omniture.com">Dallas - Beta</option>
+              <option value="api-sbx1.omniture.com">Sandbox</option>
+            </select>
+          </div>
+          <button id="sign-in" class="btn btn-success">Sign in</button>
+        </div>
+      </div>
+
+      <div id="spinner"><div class="text-center"><i class="fa fa-spinner fa-5x fa-pulse"></i></div></div>
+
+      <div id="logged-in">
+        <div class="form-group">
+          <label>Users CSV</label>
+          <input id="fileinput" class="form-control" type="file"/>
+        </div>
+        <button id="createusers" class="btn btn-success">Import users</button>
+      </div>
+    </div>
+  </body>
 </html>

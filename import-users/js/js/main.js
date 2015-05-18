@@ -1,17 +1,44 @@
 var api = (function($, MarketingCloud) {
+    function showSpinner() {
+		$("#spinner").fadeIn(500);
+    }
+
+    function hideSpinner() {
+		$("#spinner").fadeOut(500);
+    }
+
+    function login() {
+        showSpinner();
+		getAnalyticsClient().makeRequest('Company.GetReportSuites', '', function reportSuitesPopulate(data) {
+            hideSpinner();
+			$("#logged-in").fadeIn(500);
+            $("#credentials").fadeOut(500);
+		}).fail(function(data) {
+			hideSpinner();
+            $(document).trigger("add-alerts", {
+                message: data.responseJSON.error_description,
+                priority: "error"
+            });
+        });
+    }
+
 	function importUsers(csvContents) {
 		if (!csvContents) {
-			alert('Your CSV file appears to be empty.')
-			return;
+            $(document).trigger("add-alerts", {
+                message: "There is no CSV selected",
+                priority: "warning"
+            });
+            return;
 		}
 
-        var analyticsClient = MarketingCloud.getAnalyticsClient($('#login').val(), $('#secret').val(), $('#endpoint').val()),
+        var analyticsClient = getAnalyticsClient(),
             deferreds = [],
 			lines = $.map(csvContents.split('\n'), $.trim),
 			csvHeader = lines.splice(0, 1)[0].split(','),
-            counter = 0;
+            counter = 0,
+            userNames = [];
 
-        $('#spinner').fadeIn("slow");
+        showSpinner();
 
 		$.each(lines, function(lineIndex, line) {
             if (line.length == 0) {
@@ -24,13 +51,25 @@ var api = (function($, MarketingCloud) {
 				userJson[csvHeader[i]] = row[i]
 			}
 			userJson['group_names'] = userJson['group_names'].split('|');
+            userNames.push(userJson.login);
 			deferreds.push(createUser(analyticsClient, userJson));
 		});
 
-        $.each(deferreds, function() {
-            this.always(function() {
+        $.each(deferreds, function(i) {
+            var userName = userNames[i];
+            this.done(function(data) {
+                $(document).trigger("add-alerts", {
+                    message: "Added user " + userName,
+                    priority: "success"
+                });
+            }).fail(function(data) {
+                $(document).trigger("add-alerts", {
+                    message: "Can't add user " + userName + ": " + data.responseJSON.error_description,
+                    priority: "warning"
+                });
+            }).always(function() {
                 if (++counter == deferreds.length) {
-                    $('#spinner').fadeOut("slow");
+                    hideSpinner();
                 }
             });
         });
@@ -40,18 +79,26 @@ var api = (function($, MarketingCloud) {
 		return analyticsClient.makeRequest("Permissions.AddLogin", user);
 	}
 
+	function getAnalyticsClient() {
+		return MarketingCloud.getAnalyticsClient($("#login").val(), $("#secret").val(), $("#endPoint").val());
+	}
+
     $(function() {
         var csvContents;
         $('#fileinput').change(function(e) {
             MarketingCloud.fileSupport.readFile(this, function(contents) {
                 csvContents = contents;
             }, function(err) {
-                alert(err);
+                $(document).trigger("add-alerts", {
+                    message: err,
+                    priority: "error"
+                });
             })
         });
         $('#createusers').on('click', function() {
             importUsers(csvContents);
         });
+        $('#sign-in').on('click', login);
     });
 
 })(jQuery, window.MarketingCloud);
