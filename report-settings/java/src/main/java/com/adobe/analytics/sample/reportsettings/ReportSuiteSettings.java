@@ -21,7 +21,7 @@ public class ReportSuiteSettings {
 		final String secret = properties.getProperty("secret");
 		final String endpoint = properties.getProperty("endpoint");
 
-		final AnalyticsClient client = new AnalyticsClient(username, secret, endpoint);
+		final AnalyticsClient client = AnalyticsClient.authenticateWithSecret(username, secret, endpoint);
 		final ReportSuiteMethods methods = new ReportSuiteMethods(client);
 
 		if (args.length > 0) {

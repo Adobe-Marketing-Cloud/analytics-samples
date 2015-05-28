@@ -29,7 +29,7 @@ public class ImportUsers {
 		final String secret = properties.getProperty("secret");
 		final String endpoint = properties.getProperty("endpoint");
 
-		final AnalyticsClient client = new AnalyticsClient(username, secret, endpoint);
+		final AnalyticsClient client = AnalyticsClient.authenticateWithSecret(username, secret, endpoint);
 		final PermissionsMethods methods = new PermissionsMethods(client);
 
 		try (final Reader reader = new FileReader(args[0])) {

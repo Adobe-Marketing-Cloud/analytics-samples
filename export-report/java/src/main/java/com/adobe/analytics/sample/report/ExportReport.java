@@ -31,7 +31,7 @@ public class ExportReport {
 		final String secret = properties.getProperty("secret");
 		final String endpoint = properties.getProperty("endpoint");
 
-		final AnalyticsClient client = new AnalyticsClient(username, secret, endpoint);
+		final AnalyticsClient client = AnalyticsClient.authenticateWithSecret(username, secret, endpoint);
 		final ReportMethods methods = new ReportMethods(client);
 		final ReportResponse reportResponse = getReport(properties, methods);
 		final Report report = reportResponse.getReport();
