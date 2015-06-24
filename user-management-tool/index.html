@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/config.js"></script>
+    <script type="text/javascript" src="js/file_io.js"></script>
+    <script type="text/javascript" src="js/wsse.js"></script>
+    <script type="text/javascript" src="js/api_client.js"></script>
+
+    <style>
+        #group-rsid-div,
+        #copyGroupRsid-div {
+            display: none
+        }
+        
+        .spinner {
+            display: none
+        }
+        
+        #secondarycreateusers {
+            margin-right: 0;
+        }
+    </style>
+    <title>User management tool</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Adobe Analytics User Management Tool</h1>
+
+        <h2>Primary account <span class="spinner"><i class="fa fa-spinner fa-1x fa-pulse"></i></span></h2>
+
+        <div data-alerts="alerts"></div>
+
+        <div class="panel panel-default" id="primary-credentials">
+            <div class="panel-body">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input class="form-control" type='text' id="primary-login" />
+                </div>
+
+                <div class="form-group">
+                    <label>Secret</label>
+                    <input class="form-control" type='password' id="primary-secret" />
+                </div>
+
+                <div class="form-group">
+                    <label>Endpoint</label>
+                    <select id="primary-endpoint" class="form-control">
+                        <option value="api.omniture.com">San Jose - Production</option>
+                        <option value="api2.omniture.com">Dallas - Production</option>
+                        <option value="api3.omniture.com">London - Production</option>
+                        <option value="api5.omniture.com">Portland - Production</option>
+                        <option value="api4.omniture.com">Singapore - Production</option>
+                        <option value="beta-api.omniture.com">San Jose - Beta</option>
+                        <option value="beta-api2.omniture.com">Dallas - Beta</option>
+                        <option value="api-sbx1.omniture.com">Sandbox</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <h2>Secondary account <span class="spinner"><i class="fa fa-spinner fa-1x fa-pulse"></i></span></h2>
+        <i> this can be left blank in some scenarios </i>
+
+        <div class="panel panel-default" id="secondary-credentials">
+            <div class="panel-body">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input class="form-control" type='text' id="secondary-login" />
+                </div>
+
+                <div class="form-group">
+                    <label>Secret</label>
+                    <input class="form-control" type='password' id="secondary-secret" />
+                </div>
+
+                <div class="form-group">
+                    <label>Endpoint</label>
+                    <select id="secondary-endpoint" class="form-control">
+                        <option value="api.omniture.com">San Jose - Production</option>
+                        <option value="api2.omniture.com">Dallas - Production</option>
+                        <option value="api3.omniture.com">London - Production</option>
+                        <option value="api5.omniture.com">Portland - Production</option>
+                        <option value="api4.omniture.com">Singapore - Production</option>
+                        <option value="beta-api.omniture.com">San Jose - Beta</option>
+                        <option value="beta-api2.omniture.com">Dallas - Beta</option>
+                        <option value="api-sbx1.omniture.com">Sandbox</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h2>Import Users <span class="spinner"><i class="fa fa-spinner fa-1x fa-pulse"></i></span></h2>
+            <div class="form-group">
+                <label>import Users from CSV</label>
+                <input id="importUsersInput" class="form-control" type="file" />
+            </div>
+
+            <button id="primary-createUsers" class="btn btn-success">
+                Primary account Import users
+            </button>
+
+            <button id="secondary-createUsers" class="btn btn-danger  pull-right">
+                Secondary account Import users
+            </button>
+        </div>
+
+        <h2>Export users</h2>
+
+        <div class="panel panel-default" id="export-credentials">
+            <div class="panel-body">
+
+                <button id="primary-downloadUsers" class="btn btn-success">
+                    Primary export users
+                </button>
+                <button id="secondary-downloadUsers" class="btn btn-danger  pull-right">
+                    Secondary export users
+                </button>
+            </div>
+        </div>
+
+        <h2>Delete Users</h2>
+        <div class="form-group">
+            <div class="panel panel-default" id="csv-comparer">
+
+                <div class="form-group">
+                    <label>Delete Users CSV</label>
+                    <input id="deleteUsersInput" class="form-control" type="file" />
+                </div>
+
+                <button id="primary-deleteUsers" class="btn btn-success">
+                    Primary Delete users
+                </button>
+                <button id="secondary-deleteUsers" class="btn btn-danger  pull-right">
+                    Secondary Delete users
+                </button>
+            </div>
+
+        </div>
+
+        <h2>CSV Comparer</h2>
+
+        <div class="panel panel-default" id="csv-comparer">
+            <div class="panel-body">
+                <div class="form-group">
+                    <label>Base CSV</label>
+                    <input id="baseCsvInput" class="form-control" type="file" />
+                </div>
+
+                <div class="form-group">
+                    <label>Compared CSV</label>
+                    <input id="comparedCsvInput" class="form-control" type="file" />
+                </div>
+                <button id="primary-downloadDiff" class="btn btn-primary">
+                    Compare CSVs
+                </button>
+                <br>
+                <br> To have your account consistent with the Base CSV:
+                <br> 1. Import the users from the base CSV to your account
+                <br> 2. Use the downloaded user-differences.csv file in the Delete users section
+                <br>
+            </div>
+        </div>
+
+        <h2>Create group</h2>
+
+        <div class="panel panel-default" id="group-management">
+            <div class="panel-body">
+
+                <button id="primary-getRsid" class="btn btn-success">
+                    Get RSIDs From Primary Account
+                </button>
+
+                <button id="secondary-getRsid" class="btn btn-danger  pull-right">
+                    Get RSIDs From Secondary Account
+                </button>
+
+                <div class="form-group">
+                    <label>Group name</label>
+                    <input class="form-control" type='text' id="groupName" />
+                </div>
+
+                <div class="form-group">
+                    <label>Group description</label>
+                    <input class="form-control" type='text' id="groupDescription" />
+                </div>
+
+                <div id="groupRsid-div" class="form-group">
+                    <label>Group Report Suites</label>
+                    <select multiple id="groupRsid" class="form-control"></select>
+                </div>
+
+                <div id="groupCategories" class="form-group">
+                    <label>Group Categories</label>
+                    </br>
+                    <input type="checkbox" name="ecommerce" value="ecommerce" checked> Ecommerce
+                    <br>
+                    <input type="checkbox" name="traffic" value="traffic" checked> Traffic
+                    <br>
+                    <input type="checkbox" name="paths" value="paths" checked> Paths
+                    <br>
+                    <input type="checkbox" name="custom_paths" value="custom_paths" checked> Custom Paths
+                    <br>
+                    <input type="checkbox" name="tools" value="tools" checked> Tools
+                    <br>
+                    <input type="checkbox" name="search_center" value="search_center" checked> Search Center
+                    <br>
+                    <input type="checkbox" name="tnt" value="tnt" checked> Tnt
+                    <br>
+                    <input type="checkbox" name="video" value="video" checked> Video
+                    <br>
+                    <input type="checkbox" name="web_services" value="web_services" checked> Web Services
+                    <br>
+                    <input type="checkbox" name="admin_console" value="admin_console" checked> Admin Console
+                    <br>
+                    <input type="checkbox" name="report_download" value="report_download" checked> Report Download
+                    <br>
+                    <input type="checkbox" name="survey" value="survey" checked> Survey
+                    <br>
+                    <input type="checkbox" name="advanced_reporting" value="advanced_reporting" checked> Advanced Reporting
+                    <br>
+                    <input type="checkbox" name="social" value="social" checked> Social
+                    <br>
+                    <input type="checkbox" name="data_connectors" value="data_connectors" checked> Data Connectors
+                    <br>
+                </div>
+
+                <button id="primary-createGroup" class="btn btn-success">
+                    Primary Account Create group
+                </button>
+                <button id="createGroup" class="btn btn-danger  pull-right">
+                    Secondary Account Create group
+                </button>
+            </div>
+        </div>
+
+        <h2>Copy group</h2>
+
+        <div class="panel panel-default" id="group-copy">
+            <div class="panel-body">
+                <ul>
+                    <li>
+                        Click "Get groups" button to choose source account
+                    </li>
+                    <li>
+                        Report suites will be downloaded from 2nd (opposite) account*
+                    </li>
+                    <li>
+                        Choose the group to copy
+                    </li>
+                    <li>
+                        Choose report suites to assign them to the chosen group
+                    </li>
+                    <li>
+                        Click "Copy group" button to save group in to 2nd (opposite) account*
+                    </li>
+                </ul>
+                <i> If you have chosen primary account button (green), groups will be downloaded from primary account, report suites from secondary, group will be copied into secondary </i>
+                <br/>
+                <br/>
+                <div class="form-group">
+                    <label>Groups list</label>
+                    <select class="form-control" type='text' id="groupList" />
+                    </select>
+                    <button id="primary-getGroups" class="btn btn-success">
+                        Get groups from primary account
+                    </button>
+                    <button id="secondary-getGroups" class="btn btn-danger  pull-right">
+                        Get groups from secondary account
+                    </button>
+
+                </div>
+
+                <br />
+                <div id="copyGroupRsid-div" class="form-group">
+                    <label>Group Report Suites</label>
+                    <select multiple id="copyGroupRsid" class="form-control"></select>
+                </div>
+
+                <button id="copyGroup" class="btn btn-primary">
+                    Copy Group
+                </button>
+            </div>
+        </div>
+
+    </div>
+    <script type="text/javascript" src="js/ui.js"></script>
+    <script type="text/javascript" src="js/jquery.bsAlerts.min.js"></script>
+    <script type="text/javascript" src="js/groupManager.js"></script>
+    <script type="text/javascript" src="js/userManager.js"></script>
+    <script type="text/javascript" src="js/csvComparer.js"></script>
+</body>
+
+</html>

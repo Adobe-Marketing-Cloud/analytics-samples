@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <style>
+      #logged-in { display: none }
+      #spinner  { display: none }
+    </style>
+    <title>Real Time Showcase</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="heading col-md-6">
+          <h1>Real Time Showcase <span id="spinner"><i class="fa fa-spinner fa-1x fa-pulse"></i></span></h1>
+        </div>
+      </div>
+      <div class="config">
+        <div data-alerts="alerts"></div>
+
+        <div class="panel panel-default" id="credentials">
+          <div class="panel-heading">
+            <h3 class="panel-title">Credentials</h3>
+          </div>
+          <div class="panel-body">
+            <div class="form-group">
+              <label>Username</label>
+              <input class="form-control" type='text' id="login"/>
+            </div>
+
+            <div class="form-group">
+              <label>Secret</label>
+              <input class="form-control" type='password' id="secret"/>
+            </div>
+
+            <div class="form-group">
+              <label>Endpoint</label>
+              <select id="endPoint" class="form-control">
+                <option value="api.omniture.com">San Jose - Production</option>
+                <option value="api2.omniture.com">Dallas - Production</option>
+                <option value="api3.omniture.com">London - Production</option>
+                <option value="api5.omniture.com">Portland - Production</option>
+                <option value="api4.omniture.com">Singapore - Production</option>
+                <option value="beta-api.omniture.com">San Jose - Beta</option>
+                <option value="beta-api2.omniture.com">Dallas - Beta</option>
+                <option value="api-sbx1.omniture.com">Sandbox</option>
+              </select>
+            </div>
+            <button id="getReportSuites" class="btn btn-success">Sign in</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="step-1" hidden>
+        <div class="form-group">
+          <label>Report suite</label>
+          <select id="reportSuiteSelect" class="form-control">
+          </select>
+        </div>
+      </div>
+
+      <div id="step-2" hidden>
+        <div class="form-group">
+          <label>Report</label>
+          <select id="reportSelect" class="form-control">
+          </select>
+        </div>
+      </div>
+    
+      <div id="step-3" hidden>
+        <div class="form-group">
+          <label>Element</label>
+          <select id="elementSelect" class="form-control">
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Interval</label>
+          <input class="form-control" type='number' id="interval"/>
+          <p class="help-block">Set up how often do you want the report to refresh (in seconds), eg.: <code>30</code>.</p>
+        </div>
+
+        <button id="runReport" class="btn btn-success">Run report!</button>
+      </div>
+
+      <div id="analytics-configuration" hidden>
+        <h3>Tracking Configuration</h3>
+        <p class="help-block">If you want to track real-time data and see it in the next step, please enter your tracking servers. Otherwise you will see the data, but it will not be tracked via the report. Remember that it will send custom data to your RS. <strong>DO NOT USE WITH PRODUCTION REPORT SUITES!</strong></p>
+        
+        <label>Tracking Server</label>
+        <input type="text" class="form-control" id="trackingServer" />
+        <label>Tracking Server Secure</label>
+        <input type="text" class="form-control" id="trackingServerSecure" /> </br>
+
+        <button id="analyticsConfig" class="btn btn-success">Enable tracking</button></br></br>
+        <button id="analyticsSkip" class="btn btn-danger">Skip</button>
+      </div>
+
+      <div id="report" hidden>
+        <h3>Real Time Demo</h3>
+
+        <div class="input-group">
+          <input type="text" class="form-control search-input" placeholder="Your var's value">
+          <span class="input-group-btn">
+            <button class="btn btn-primary search-button" type="button">Send event!</button>
+          </span>
+        </div>
+
+        <div id="reportResults">
+          <h3>Real Time Report</h3>
+          <table id="reportTable" class="table table-striped">
+        </div>
+      </div>
+
+    <script type="text/javascript" src="js/wsse.js"></script>
+    <script type="text/javascript" src="js/api_client.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="js/jquery.bsAlerts.min.js"></script>
+    <script type="text/javascript" src="js/AppMeasurement.js"></script>
+    <script type="text/javascript" src="js/reportParser.js"></script>
+  </body>
+</html>
