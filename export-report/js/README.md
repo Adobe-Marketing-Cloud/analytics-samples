@@ -26,4 +26,9 @@ Just open `index.html` in the browser
 4. Provide elements Id(eVarN) 
 5. Provide report range dates (in YYYY-MM-DD format) 
 6. Provide report granuality
-7. Click get Report ( you can be almost sure that alert with message: "report not ready" will appear, this is expected behaviour)
+7. Click get Report (you can be almost sure that alert with message: "report not ready" will appear, this is expected behaviour)
+
+Api methods used in this example:
+* [GetReportSuites](https://marketing.adobe.com/developer/api-explorer#Company.GetReportSuites) - to get the list of reports suites for the account
+* [ReportQueue](https://marketing.adobe.com/developer/api-explorer#Report.Queue) - this returns a report id based on users input
+* [Report.Get](https://marketing.adobe.com/developer/api-explorer#Report.Get) - the report id returned by Report.Queue is used by this method to obtain the final report

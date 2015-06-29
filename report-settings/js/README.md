@@ -23,4 +23,13 @@ Just open `index.html` in the browser
 2. Choose report suite
 3. Download json file with configuration
 
+Api methods used in this example:
+* [GetReportSuites](https://marketing.adobe.com/developer/api-explorer#Company.GetReportSuites) - to get the list of reports suites for the account
+* [GetProps](https://marketing.adobe.com/developer/api-explorer#ReportSuite.GetProps) - to download the list of props for comparison
+* [GetEvars](https://marketing.adobe.com/developer/api-explorer#ReportSuite.GetEvars) - to download the list of evars for comparison
+
+
+
+
+
 If you upload file before retrieving report suite configuration, the application will compare the file with the current settings.

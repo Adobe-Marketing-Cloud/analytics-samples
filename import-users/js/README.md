@@ -22,3 +22,6 @@ Just open index.html in the Browser
 2. Select a CSV file in a proper format. There is an example.csv file included in the project. Please keep the order of the columns and values consistent with that file.
 Note that the group_names for a specific user should be separated with a pipe symbol.
 3. Click create users, the browser console will log success / failure for creating each user from the CSV file.
+
+Api methods used in this example:
+* [AddLogin](https://marketing.adobe.com/developer/api-explorer#Permissions.AddLogin) - adds users based on uploaded CSV
